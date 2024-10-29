@@ -6,6 +6,10 @@ class Migration(migrations.Migration):
 
     initial = True  # Indica que esta es la primera migración para este modelo
 
+    dependencies = [
+        
+    ]
+
     operations = [
         migrations.CreateModel(
             name='CustomUser',
