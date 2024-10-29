@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Empleados{% endblock %}
+{% load currency %}
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center text-danger mt-3">Lista de empleados</h4>
+
+<nav class="navbar bg-body-tertiary">
+   <div class="container-fluid">
+      <form method="GET" class="d-flex">
+         <div class="row">
+            <div class="col-md-3">
+               <label for="estatus">Estatus</label>
+               <select name="estatus" id="estatus" class="form-control">
+                  <option value="">Todos</option>
+                  <option value="True" {% if estatus == "True" %}selected{% endif %}>Activo</option>
+                  <option value="False" {% if estatus == "False" %}selected{% endif %}>Inactivo</option>
+               </select>
+            </div>
+      
+            <div class="col-md-3">
+               <label for="empresa">Empresa</label>
+               <input type="text" name="empresa" id="empresa" class="form-control" value="{{ empresa }}">
+            </div>
+      
+            <div class="col-md-3">
+               <label for="proyecto">Proyecto</label>
+               <input type="text" name="proyecto" id="proyecto" class="form-control" value="{{ proyecto }}">
+            </div>
+      
+            <div class="col-md-3">
+               <label for="total_min">Total Mínimo</label>
+               <input type="number" name="total_min" id="total_min" class="form-control" value="{{ total_min }}">
+            </div>
+      
+            <div class="col-md-3">
+               <label for="total_max">Total Máximo</label>
+               <input type="number" name="total_max" id="total_max" class="form-control" value="{{ total_max }}">
+            </div>
+      
+            <div class="col-md-3 mt-4">
+               <button class="btn btn-outline-success" type="submit">Filtrar</button>
+            </div>
+         </div>
+      </form>
+   </div>
+</nav>
+
+
+<hr class="border border-danger border-3 opacity-75">
+
+{% if empleados %}
+<div class="table-responsive">
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID de empleado</th>
+            <th scope="col">Nombre(s)</th>
+            <th scope="col">Apellido paterno</th>
+            <th scope="col">Apellido materno</th>
+            <th scope="col">RFC</th>
+            <th scope="col">IMSS</th>
+            <th scope="col">INFONAVIT</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for empleado in empleados %}
+         <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ empleado.id }}</td>
+            <td>{{ empleado.nombres }}</td>
+            <td>{{ empleado.apellido_paterno }}</td>
+            <td>{{ empleado.apellido_materno }}</td>
+            <td>{{ empleado.rfc }}</td>
+            <td>{{ empleado.imss }}</td>
+            <td>{{ empleado.infonavit }}</td>
+            <td><a href="{% url 'empleados:editar_empleado' empleado.id %}" class="btn btn-outline-danger">Editar</a></td>
+            <td><a href="{% url 'empleados:eliminar_empleado' empleado.id %}" onclick="return confirm('¿Estás seguro de que quieres eliminar este empleado?');" class="btn btn-outline-danger">Eliminar</a></td>
+            
+         </tr>
+         {% endfor %}
+         <tr>
+            <td colspan="4"></td>
+            <td><strong>Total:</strong></td>
+            <td><strong>Nada</strong></td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+{% endif %}
+<a href="{% url 'empleados:registro_empleados' %}" class="btn btn-danger mb-3">Registrar empleado</a>
+
+{% endblock %}

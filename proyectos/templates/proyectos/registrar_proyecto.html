@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Registro de proyectos{% endblock %}
+
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center text-danger">Registrar proyecto</h4>
+
+<hr class="border border-danger border-3 opacity-75">
+
+<div class="container text-center">
+    <form method="post">
+        {% csrf_token %}
+
+        {{proyectos_form.as_p}}
+
+        <button type="submit" class="btn btn-danger">Registrar proyecto</button>
+    </form>
+</div>
+
+
+{% endblock %}

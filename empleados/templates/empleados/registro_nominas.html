@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Registro de nóminas{% endblock %}
+
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center text-danger mt-3">Registro nóminas {{ proyecto.proyecto }}</h4>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'proyectos:detalles_proyecto' proyecto.slug %}">Detalles de proyecto</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_vehiculos' proyecto.slug %}">Gastos
+            vehículos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_generales' proyecto.slug %}">Gastos generales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_materiales' proyecto.slug %}">Gastos materiales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page"
+            href="{% url 'contabilidad:gastos_mano_obra' proyecto.slug %}">Gastos mano de obra</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_seguridad' proyecto.slug %}">Gastos seguridad</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_equipos' proyecto.slug %}">Gastos equipos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:ingresos' proyecto.slug %}">Ingresos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'empleados:asistencias' proyecto.slug %}">Asistencias</a>
+    </li>
+</ul>
+
+<hr class="border border-danger border-3 opacity-75">
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <h4 class="h4 text-center text-danger">Registrar nóminas</h4>
+        {% csrf_token %}
+        {{ nominas_form.as_p }}
+        <button type="submit" class="btn btn-danger">Cargar nóminas</button>
+        {% load static %}
+        <a href="{% static 'documents/nominas_template.xlsx' %}" class="btn btn-outline-danger">Descargar
+            plantilla</a>
+    </form>
+</div>
+
+
+
+{% endblock %}

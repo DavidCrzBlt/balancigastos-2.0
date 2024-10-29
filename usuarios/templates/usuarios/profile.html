@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+{% include 'navbar_profile.html' %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3 text-center">
+            {% if username.profile_picture %}
+            <img src="{{ username.profile_picture.url }}" alt="Foto de perfil" class="profile-img mb-3">
+            {% else %}
+            <p>No hay foto de perfil</p>
+            {% endif %}
+            <h3>Bienvenido, {{ username.user}}!</h3>
+        </div>
+        <div class="col-md-9">
+            <h4 class="text-center">Biografía</h4>
+            <p>{{ username.bio }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

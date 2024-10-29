@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Lista de gastos mano de obra{% endblock %}
+{% load currency %}
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center mt-3 text-danger"> Gastos mano de obra {{proyecto.proyecto}}</h4>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'proyectos:detalles_proyecto' proyecto.slug %}">Detalles de proyecto</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_vehiculos' proyecto.slug %}">Gastos
+            vehículos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_generales' proyecto.slug %}">Gastos generales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"  href="{% url 'contabilidad:gastos_materiales' proyecto.slug %}">Gastos materiales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'contabilidad:gastos_mano_obra' proyecto.slug %}">Gastos mano de obra</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_seguridad' proyecto.slug %}">Gastos seguridad</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_equipos' proyecto.slug %}">Gastos equipos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:ingresos' proyecto.slug %}">Ingresos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'empleados:asistencias' proyecto.slug %}">Asistencias</a>
+    </li>
+</ul>
+
+<hr class="border border-danger border-3 opacity-75">
+
+<div class="table-responsive">
+    <table class="table table-stripped">
+    
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nómina</th>
+                <th scope="col">IMSS</th>
+                <th scope="col">Infonavit</th>
+                <th scope="col">ISN</th>
+                <th scope="col">ISR</th>
+                <th scope="col">Horas_extras</th>
+                <th scope="col">Total</th>
+                <th scope="col">Lote</th>
+                <th scope="col">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gasto in gastosmanoobra_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ gasto.nomina|pesos }}</td>
+                <td>{{ gasto.imss|pesos }}</td>
+                <td>{{ gasto.infonavit|pesos }}</td>
+                <td>{{ gasto.isn|pesos }}</td>
+                <td>{{ gasto.isr|pesos }}</td>
+                <td>{{ gasto.horas_extras|pesos }}</td>
+                <td>{{ gasto.monto|pesos }}</td>
+                <td><a href="{% url 'empleados:nominas' proyecto.slug gasto.lote %}">{{ gasto.lote }}</a></td>
+                <td>{{ gasto.fecha|date:"d-M-y" }}</td>
+                <td><a href="{% url 'contabilidad:eliminar_gastos_mano_obra' proyecto.slug gasto.id %}" class="btn btn-outline-danger"  onclick="return confirm('¿Estás seguro de que quieres eliminar este gasto?');">Eliminar</a></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="5"></td>
+                <td><strong>Total:</strong></td>
+                <td><strong>{{ total_monto|pesos }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a class="btn btn-danger" href="{% url 'empleados:registro_nominas' proyecto.slug %}">Registrar nóminas</a>
+
+{% endblock %}

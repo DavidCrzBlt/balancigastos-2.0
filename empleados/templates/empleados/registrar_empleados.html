@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Registro de empleados{% endblock %}
+
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<hr class="border border-danger border-3 opacity-75">
+
+<div class="container">
+    <form method="post">
+        <h4 class="h4 text-center text-danger">Registrar empleado</h4>
+        {% csrf_token %}
+        {{ empleados_form.as_p }}
+        <button type="submit" class="btn btn-danger">Registrar empleado</button>
+    </form>
+</div>
+
+{% endblock %}

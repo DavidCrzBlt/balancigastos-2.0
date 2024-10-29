@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Registro de {{ categoria_operacion }}{% endblock %}
+
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center text-danger mt-3">Registrar {{ categoria_operacion }} proyecto {{ proyecto.proyecto }}</h4>
+
+<hr class="border border-danger border-3 opacity-75">
+
+{% if proyecto %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'proyectos:detalles_proyecto' proyecto.slug %}">Detalles de proyecto</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'vehiculos' %}active{% endif %}"
+            aria-current="{% if active_tab == 'vehiculos' %}page{% endif %}"
+            href="{% url 'contabilidad:gastos_vehiculos' proyecto.slug %}">Gastos vehículos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'generales' %}active{% endif %}"
+            aria-current="{% if active_tab == 'generales' %}page{% endif %}"
+            href="{% url 'contabilidad:gastos_generales' proyecto.slug %}">Gastos generales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'materiales' %}active{% endif %}"
+            aria-current="{% if active_tab == 'materiales' %}page{% endif %}"
+            href="{% url 'contabilidad:gastos_materiales' proyecto.slug %}">Gastos materiales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'mano_obra' %}active{% endif %}"
+            aria-current="{% if active_tab == 'mano_obra' %}page{% endif %}"
+            href="{% url 'contabilidad:gastos_mano_obra' proyecto.slug %}">Gastos mano de obra</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'seguridad' %}active{% endif %}"
+            aria-current="{% if active_tab == 'seguridad' %}page{% endif %}"
+            href="{% url 'contabilidad:gastos_seguridad' proyecto.slug %}">Gastos de seguridad</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'equipos' %}active{% endif %}"
+            aria-current="{% if active_tab == 'equipos' %}page{% endif %}"
+            href="{% url 'contabilidad:gastos_equipos' proyecto.slug %}">Gastos equipos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'ingresos' %}active{% endif %}"
+            aria-current="{% if active_tab == 'ingresos' %}page{% endif %}"
+            href="{% url 'contabilidad:ingresos' proyecto.slug %}">Ingresos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'empleados:asistencias' proyecto.slug %}">Asistencias</a>
+    </li>
+</ul>
+{% endif %}
+
+
+<div class="container text-center">
+    <form method="post">
+        {% csrf_token %}
+
+        {{operaciones_form.as_p}}
+
+        <button type="submit" class="btn btn-danger">Registrar</button>
+    </form>
+</div>
+
+{% endblock %}

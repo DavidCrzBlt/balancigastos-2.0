@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Detalles de proyecto{% endblock %}
+{% load currency %}
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center mt-3 text-danger">Ingresos {{ proyecto.proyecto }}</h4>
+
+{% if proyecto %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'proyectos:detalles_proyecto' proyecto.slug %}">Detalles de proyecto</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_vehiculos' proyecto.slug %}">Gastos vehículos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_generales' proyecto.slug %}">Gastos generales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_materiales' proyecto.slug %}">Gastos materiales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_mano_obra' proyecto.slug %}">Gastos mano de obra</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_seguridad' proyecto.slug %}">Gastos seguridad</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'contabilidad:gastos_equipos' proyecto.slug %}">Gastos equipos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'contabilidad:ingresos' proyecto.slug %}">Ingresos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'empleados:asistencias' proyecto.slug %}">Asistencias</a>
+    </li>
+</ul>
+{% endif %}
+
+<hr class="border border-danger border-3 opacity-75">
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Concepto</th>
+                <th scope="col">Monto</th>
+                <th scope="col">I.V.A.</th>
+                <th scope="col">Referencia</th>
+                <th scope="col">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingreso in ingresos_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ ingreso.concepto }}</td>
+                <td>{{ ingreso.monto|pesos }}</td>
+                <td>{{ ingreso.iva|pesos }}</td>
+                <td>{{ ingreso.referencia }}</td>
+                <td>{{ ingreso.fecha|date:"d-M-y" }}</td>
+                <td><a href="{% url 'contabilidad:editar_ingresos' proyecto.slug ingreso.id %}" class="btn btn-outline-danger">Editar</a></td>
+                <td><a href="{% url 'contabilidad:eliminar_ingresos' proyecto.slug ingreso.id %}" onclick="return confirm('¿Estás seguro de que quieres eliminar este ingreso?');" class="btn btn-outline-danger">Eliminar</a></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="1"></td>
+                <td><strong>Total:</strong></td>
+                <td><strong>{{ total_monto|pesos }}</strong></td>
+                <td><strong>{{ total_iva|pesos }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a href="{% url 'contabilidad:registro_ingresos' proyecto.slug %}" class="btn btn-danger mb-3">Registrar ingreso</a>
+
+{% endblock %}

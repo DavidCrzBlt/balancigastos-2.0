@@ -1,0 +1,61 @@
+{% load static %}
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'proyectos:proyectos' %}">
+                <img class="logo" src="{% static 'images/Cuatimar_logo.png' %}" alt="Logo" height="50px">
+                <p class="text-capitalize text-danger fs-4">| Bienvenido, {{ profile_username }}</p>
+            </a>
+        </div>
+        <div class="container">
+            <ul class="nav nav-tabs justify-content-end">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Perfil
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'usuarios:profile' %}">Mi perfil</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'usuarios:password_change' %}">Cambiar contraseña</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'usuarios:edit_profile' %}">Editar perfil</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'proyectos:proyectos' %}">Proyectos</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Empleados
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'empleados:empleados' %}">Empleados</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'empleados:registro_empleados' %}">Registrar empleado</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>

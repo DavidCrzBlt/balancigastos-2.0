@@ -1,0 +1,11 @@
+.table-responsive {
+    max-height: 400px;  /* Set the max height for the table */
+    overflow-y: auto;   /* Enable vertical scrolling */
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;       /* Ensure the header stays above the body content */
+    background-color: white; /* Ensure background doesn't overlap */
+}

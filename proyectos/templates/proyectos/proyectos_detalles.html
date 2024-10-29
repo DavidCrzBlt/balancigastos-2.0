@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Detalles de proyecto{% endblock %}
+{% load currency %}
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+{% if object %}
+<h4 class="h4 text-center mt-3 text-danger">Detalles {{ object.proyecto }}</h4>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="{% url 'proyectos:detalles_proyecto' object.slug %}">Detalles
+      de proyecto</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:gastos_vehiculos' object.slug %}">Gastos vehículos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:gastos_generales' object.slug %}">Gastos generales</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:gastos_materiales' object.slug %}">Gastos materiales</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:gastos_mano_obra' object.slug %}">Gastos mano de obra</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:gastos_seguridad' object.slug %}">Gastos seguridad</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:gastos_equipos' object.slug %}">Gastos equipos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'contabilidad:ingresos' object.slug %}">Ingresos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'empleados:asistencias' object.slug %}">Asistencias</a>
+  </li>
+</ul>
+
+<hr class="border border-danger border-3 opacity-75">
+
+<div class="row justify-content-evenly">
+  <ul class="list-group col-4">
+    <li class="list-group-item text-center"><strong>Ingresos</strong></li>
+    <hr class="border border-danger border-3 opacity-75">
+    <li class="list-group-item list-group-item-primary"><strong>Ingresos Totales:</strong> {{ total_ingresos|pesos }}
+    </li>
+    <li class="list-group-item"><strong>Ingresos Totales IVA:</strong> {{ total_iva_ingresos|pesos }}</li>
+
+
+    <a href="{% url 'proyectos:export_project_details_to_excel' object.slug %}" class="btn btn-danger m-5">Descargar
+      proyecto en Excel</a>
+
+  </ul>
+
+  <ul class="list-group col-4">
+    <li class="list-group-item text-center"><strong>Egresos</strong></li>
+    <hr class="border border-danger border-3 opacity-75">
+    <li class="list-group-item list-group-item-primary"><strong>Gastos totales:</strong> {{ total_gastos|pesos }}</li>
+    <li class="list-group-item"><strong>Gastos vehículos:</strong> {{ gastos_vehiculos|pesos }} </li>
+    <li class="list-group-item"><strong>Gastos generales:</strong> {{ gastos_generales|pesos }} </li>
+    <li class="list-group-item"><strong>Gastos materiales:</strong> {{ gastos_materiales|pesos }} </li>
+    <li class="list-group-item"><strong>Gastos mano de obra:</strong> {{ gastos_mano_obra|pesos }}</li>
+    <li class="list-group-item"><strong>Gastos seguridad:</strong> {{ gastos_seguridad|pesos }} </li>
+    <li class="list-group-item"><strong>Gastos equipos:</strong> {{ gastos_equipos|pesos }} </li>
+    <li class="list-group-item"><strong>Total I.V.A. gastos:</strong> {{ total_iva_gastos|pesos }}</li>
+  </ul>
+
+  <ul class="list-group col-4">
+    <li class="list-group-item text-center"><strong>Resultados</strong></li>
+    <hr class="border border-danger border-3 opacity-75">
+    <li class="list-group-item"><strong>Empresa:</strong> {{ object.empresa }}</li>
+    <li class="list-group-item"><strong>Estatus:</strong>{% if object.estatus == True %} Activo {% else %} Inactivo
+      {% endif %}</li>
+    <li class="list-group-item"><strong>Nombre del proyecto:</strong> {{ object.proyecto }}</li>
+    <li class="list-group-item"><strong>Clave de proyecto:</strong> {{ object.clave_proyecto }}</li>
+    <li class="list-group-item list-group-item-primary"><strong>Resultado Neto:</strong> {{ total_neto|pesos }}</li>
+    <li class="list-group-item"><strong>I.V.A. Neto:</strong> {{ iva_neto|pesos }}</li>
+  </ul>
+
+</div>
+
+
+<hr class="border border-danger border-3 opacity-75 mt-5">
+
+<h4 class="h4 text-center mt-3 mb-3 text-danger">Tablero de {{ object.proyecto }}</h4>
+
+<div class="container mt-2">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Ingresos vs Gastos - Semanales</h5>
+          <div id="grafica1" style="width:100%;height:300px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Porcentaje de gastos por categoría</h5>
+          <div id="grafica3" style="width:100%;height:400px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Ingresos vs Gastos - Totales</h5>
+          <div id="grafica2" style="width:100%;height:400px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var graph = JSON.parse('{{ graph_json|escapejs }}');
+  var graph2 = JSON.parse('{{ graph_json2|escapejs }}');
+  var graph3 = JSON.parse('{{ graph_json3|escapejs }}');
+  Plotly.newPlot('grafica1', graph.data, graph.layout);
+  Plotly.newPlot('grafica2', graph2.data, graph2.layout);
+  Plotly.newPlot('grafica3', graph3.data, graph3.layout);
+</script>
+
+{% endif %}
+
+{% endblock %}

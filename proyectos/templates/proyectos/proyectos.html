@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Proyectos{% endblock %}
+{% load currency %}
+{% block content %}
+
+{% include 'navbar_profile.html' %}
+
+<h4 class="h4 text-center text-danger mt-3">Lista de proyectos</h4>
+
+<nav class="navbar bg-body-tertiary">
+   <div class="container-fluid">
+      <form method="GET" class="d-flex">
+         <div class="row">
+            <div class="col-md-3">
+               <label for="estatus">Estatus</label>
+               <select name="estatus" id="estatus" class="form-control">
+                  <option value="">Todos</option>
+                  <option value="True" {% if estatus == "True" %}selected{% endif %}>Activo</option>
+                  <option value="False" {% if estatus == "False" %}selected{% endif %}>Inactivo</option>
+               </select>
+            </div>
+      
+            <div class="col-md-3">
+               <label for="empresa">Empresa</label>
+               <input type="text" name="empresa" id="empresa" class="form-control" value="{{ empresa }}">
+            </div>
+      
+            <div class="col-md-3">
+               <label for="proyecto">Proyecto</label>
+               <input type="text" name="proyecto" id="proyecto" class="form-control" value="{{ proyecto }}">
+            </div>
+      
+            <div class="col-md-3">
+               <label for="total_min">Total Mínimo</label>
+               <input type="number" name="total_min" id="total_min" class="form-control" value="{{ total_min }}">
+            </div>
+      
+            <div class="col-md-3">
+               <label for="total_max">Total Máximo</label>
+               <input type="number" name="total_max" id="total_max" class="form-control" value="{{ total_max }}">
+            </div>
+      
+            <div class="col-md-3 mt-4">
+               <button class="btn btn-outline-success" type="submit">Filtrar</button>
+            </div>
+         </div>
+      </form>
+   </div>
+</nav>
+
+
+<hr class="border border-danger border-3 opacity-75">
+
+{% if projects %}
+<div class="table-responsive">
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID de proyecto</th>
+            <th scope="col">Nombre de proyecto</th>
+            <th scope="col">Clave de proyecto</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Estatus</th>
+            <th scope="col">Resultado</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for project in projects %}
+         <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ project.id }}</td>
+            <td><a href="{% url 'proyectos:detalles_proyecto' project.slug %}">{{ project.proyecto }}</a></td>
+            <td>{{ project.clave_proyecto }}</td>
+            <td>{{ project.empresa }}</td>
+            {% if project.estatus == True %}
+            <td><a class="btn btn-outline-danger"
+                  href="{% url 'proyectos:toggle_estatus_proyecto' project.slug %}">Activo</a></td>
+            {% else %}
+            <td><a class="btn btn-danger" href="{% url 'proyectos:toggle_estatus_proyecto' project.slug %}">Inactivo</a>
+            </td>
+            {% endif %}
+            {% if project.total < 0 %}
+            <td class="text-danger">{{ project.total|pesos }}</td>
+            {% else %}
+            <td>{{ project.total|pesos }}</td>
+            {% endif %}
+         </tr>
+         {% endfor %}
+         <tr>
+            <td colspan="4"></td>
+            <td><strong>Total:</strong></td>
+            <td><strong>{{ total_monto_neto|pesos }}</strong></td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+{% endif %}
+<a href="{% url 'proyectos:registrar_proyecto' %}" class="btn btn-danger mb-3">Registrar proyecto</a>
+
+<a href="{% url 'proyectos:export_proyectos_to_excel' %}" class="btn btn-danger mb-3">Descargar Excel</a>
+
+{% endblock %}
