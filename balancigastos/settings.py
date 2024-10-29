@@ -10,14 +10,25 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from django.core.management.utils import get_random_secret_key
 
 import os
 import sys
+
+from pathlib import Path
 import dj_database_url
+from django.core.management.utils import get_random_secret_key
+
+from dotenv import load_dotenv
 
 from django.contrib.messages import constants as message_constants
+
+
+# Carga el archivo .env según el entorno
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
+if ENVIRONMENT == 'production':
+    load_dotenv('.env.production')
+else:
+    load_dotenv('.env.local')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,7 +51,11 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','127.0.0.1,localhost').split(',
 SHARED_APPS = (
     'django_tenants',  # mandatory
     'clientes', # you must list the app where your tenant model resides in
-
+    'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
+    'empleados.apps.EmpleadosConfig',
+    'contabilidad.apps.ContabilidadConfig',
+    'proyectos.apps.ProyectosConfig',
+    'usuarios.apps.UsuariosConfig',
     'django.contrib.contenttypes',
 
     # everything below here is optional
@@ -106,28 +121,11 @@ WSGI_APPLICATION = 'balancigastos.wsgi.application'
 
 DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE','False') == 'True'
 
-# if DEVELOPMENT_MODE is True:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# elif 
-# if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-#     if os.getenv("DATABASE_URL",None) is None:
-#         raise Exception("DATABASE_URL environment variable not defined")
-#     DATABASES = {
-#         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
-#     }
-
-if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if os.getenv("DATABASE_URL", None) is None:
-        raise Exception("DATABASE_URL environment variable not defined")
-    DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
-    }
-    DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
+# Configuración de base de datos
+DATABASES = {
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+}
+DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
 
 DATABASE_ROUTERS = (
     'django_tenants.routers.TenantSyncRouter',
@@ -169,13 +167,14 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+# Ruta estática
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# Si estás en producción
+if ENVIRONMENT == 'production':
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
