@@ -119,8 +119,10 @@ DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE','False') == 'True'
 
 # Configuración de base de datos
 
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 DATABASES = {
-    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+    'default': dj_database_url.config()
 }
 DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
 
