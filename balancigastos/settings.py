@@ -119,10 +119,8 @@ DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE','False') == 'True'
 
 # Configuración de base de datos
 
-DATABASE_URL = os.getenv('DATABASE_URL')
-
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
 DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
 
@@ -165,8 +163,11 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # Ruta estática
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    ]
 
 # Si estás en producción
 if ENVIRONMENT == 'production':
