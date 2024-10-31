@@ -7,6 +7,7 @@ from clientes.forms import ClienteForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
+import os
 
 
 # Create your views here.
@@ -15,7 +16,7 @@ from django.contrib.sites.shortcuts import get_current_site
 ###--------------------------------------------------------------------------------###
 ###--------------------------------------------------------------------------------###
 
-dominio_principal = "localhost"
+dominio_principal = os.getenv('MAIN_DOMAIN')
 
 def pagina_principal(request):
     # Obtener el dominio actual
