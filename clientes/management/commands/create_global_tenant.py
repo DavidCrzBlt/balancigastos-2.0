@@ -5,6 +5,9 @@ from django.db import transaction
 from django.contrib.sites.models import Site
 from clientes.models import Cliente, DominioCliente 
 
+import os
+from dotenv import load_dotenv
+
 class Command(BaseCommand):
     help = 'Create the global tenant'
 
@@ -12,7 +15,7 @@ class Command(BaseCommand):
         # Global tenant details
         tenant_name = 'Main Tenant'
         schema_name = 'public'
-        tenant_domain = 'localhost'  # Change this to your main domain
+        tenant_domain = os.getenv('MAIN_DOMAIN')
 
         try:
             with transaction.atomic():
