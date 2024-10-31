@@ -15,12 +15,14 @@ from django.contrib.sites.shortcuts import get_current_site
 ###--------------------------------------------------------------------------------###
 ###--------------------------------------------------------------------------------###
 
+dominio_principal = "localhost"
+
 def pagina_principal(request):
     # Obtener el dominio actual
     current_site = get_current_site(request)
 
     # Verificar si el dominio es localhost
-    if current_site.domain == "localhost":
+    if current_site.domain == dominio_principal:
         return redirect('clientes:crear_cliente') 
     else:
         return redirect('usuarios:login')  
@@ -35,7 +37,7 @@ def crear_cliente(request):
 
             # Crear el dominio asociado para el tenant
             dominio_cliente = DominioCliente()
-            dominio_cliente.domain = f'{tenant.dominio}.localhost'
+            dominio_cliente.domain = f'{tenant.dominio}.{dominio_principal}'
             dominio_cliente.tenant = tenant
             dominio_cliente.is_primary = True 
             dominio_cliente.save()
@@ -44,7 +46,9 @@ def crear_cliente(request):
             Site.objects.get_or_create(domain=dominio_cliente.domain, defaults={'name': tenant.nombre})
 
             messages.success(request, f'Cliente {tenant.nombre} creado exitosamente.')
-            return HttpResponseRedirect(f'http://{dominio_cliente.domain}:8000/usuarios')
+            return HttpResponseRedirect(f'http://{dominio_cliente.domain}/usuarios')
+            # En pruebas locales comentar arriba y descomentar abajo
+            # return HttpResponseRedirect(f'http://{dominio_cliente.domain}:8000/usuarios')
     else:
         form = ClienteForm()
 
