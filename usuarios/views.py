@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from .models import Profile, CustomUser
+from .models import Profile
+
 from .forms import ProfileForm, UserRegisterForm
-from clientes.models import Client
 
 # Create your views here.
 
@@ -12,7 +12,6 @@ def signup(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.tenant = request.tenant
             user.save()
             login(request, user)
             return redirect('usuarios:profile')

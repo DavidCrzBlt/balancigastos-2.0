@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de clientes{% endblock %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+  <h2>Lista de Clientes</h2>
+  <table>
+    <tr>
+      <th>Nombre</th>
+      <th>Dominio</th>
+    </tr>
+    {% for cliente in clientes %}
+      <tr>
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.dominio }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <br>
+  <a href="{% url 'clientes:crear_cliente' %}">Agregar Nuevo Cliente</a>
+{% endblock %}

@@ -51,36 +51,32 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','127.0.0.1,localhost').split(',
 SHARED_APPS = (
     'django_tenants',  # mandatory
     'clientes', # you must list the app where your tenant model resides in
-    'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
-    'empleados.apps.EmpleadosConfig',
-    'contabilidad.apps.ContabilidadConfig',
-    'proyectos.apps.ProyectosConfig',
-    'usuarios.apps.UsuariosConfig',
+
     'django.contrib.contenttypes',
 
     # everything below here is optional
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.admin',
     'django.contrib.staticfiles',
 )
 
 TENANT_APPS = (
     # your tenant-specific apps
-    'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
-    'empleados.apps.EmpleadosConfig',
-    'contabilidad.apps.ContabilidadConfig',
     'proyectos.apps.ProyectosConfig',
+    'contabilidad.apps.ContabilidadConfig',
+    'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
     'usuarios.apps.UsuariosConfig',
+    'empleados.apps.EmpleadosConfig',
 )
 
-INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+INSTALLED_APPS = SHARED_APPS + TENANT_APPS
 
-TENANT_MODEL = "clientes.Client" 
+TENANT_MODEL = "clientes.Cliente" 
 
-TENANT_DOMAIN_MODEL = "clientes.Domain"  
+TENANT_DOMAIN_MODEL = "clientes.DominioCliente"  
 
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
@@ -133,8 +129,6 @@ DATABASE_ROUTERS = (
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
-AUTH_USER_MODEL = 'usuarios.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

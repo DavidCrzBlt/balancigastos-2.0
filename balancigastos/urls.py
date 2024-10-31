@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from clientes.views import pagina_principal
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +24,7 @@ urlpatterns = [
     path('contabilidad/',include("contabilidad.urls")),
     path('proyectos/',include("proyectos.urls")),
     path('empleados/',include("empleados.urls")),
-    path('',include("usuarios.urls")),
+    path('usuarios/',include("usuarios.urls")),
+    path('clientes/',include("clientes.urls")),
+    path('',pagina_principal,name='pagina_principal')
 ]

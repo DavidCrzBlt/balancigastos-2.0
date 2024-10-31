@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Registrar cliente{% endblock %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+  <h4 class="h4 text-center mt-3 text-danger">Nuevo cliente/empresa</h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-danger" type="submit">Crear Cliente</button>
+  </form>
+  <br>
+  <a class="btn btn-outline-primary" href="{% url 'clientes:lista_clientes' %}">Volver a la lista de clientes</a>
+{% endblock %}

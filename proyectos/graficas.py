@@ -14,8 +14,8 @@ def grafica_ingresos_vs_gastos_semanales(proyecto_id):
     df_semanal = recalcular_ingresos_gastos_por_fecha(proyecto_id)
 
     # Verifica si df_semanal tiene datos antes de graficar
-    # if df_semanal.empty:
-    #     return None  # O devuelve un gráfico vacío o un mensaje adecuado
+    if df_semanal.empty:
+        return None  # O devuelve un gráfico vacío o un mensaje adecuado
 
     # Crear la gráfica de líneas
     fig = px.line(df_semanal, x=df_semanal.index, y=['total_ingresos', 'total_gastos'], markers=True)
