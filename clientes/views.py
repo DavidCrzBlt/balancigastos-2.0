@@ -16,14 +16,14 @@ import os
 ###--------------------------------------------------------------------------------###
 ###--------------------------------------------------------------------------------###
 
-# dominio_principal = os.getenv('MAIN_DOMAIN')
+dominio_principal = os.getenv('MAIN_DOMAIN')
 
 def pagina_principal(request):
     # Obtener el dominio actual
     current_site = get_current_site(request)
 
     # Verificar si el dominio es localhost
-    if current_site.domain == 'balancigastosapp-513c6abf7b6d.herokuapp.com':
+    if current_site.domain == dominio_principal:
         return redirect('clientes:crear_cliente') 
     else:
         return redirect('usuarios:login')  
