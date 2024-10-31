@@ -172,8 +172,8 @@ STATICFILES_DIRS = [
     ]
 
 # Si estás en producción
-if ENVIRONMENT == 'production':
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# if ENVIRONMENT == 'production':
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
