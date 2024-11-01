@@ -47,9 +47,9 @@ def crear_cliente(request):
             Site.objects.get_or_create(domain=dominio_cliente.domain, defaults={'name': tenant.nombre})
 
             messages.success(request, f'Cliente {tenant.nombre} creado exitosamente.')
-            return HttpResponseRedirect(f'http://{dominio_cliente.domain}/usuarios')
+            # return HttpResponseRedirect(f'http://{dominio_cliente.domain}/usuarios')
             # En pruebas locales comentar arriba y descomentar abajo
-            # return HttpResponseRedirect(f'http://{dominio_cliente.domain}:8000/usuarios')
+            return HttpResponseRedirect(f'http://{dominio_cliente.domain}:8000/usuarios')
     else:
         form = ClienteForm()
 

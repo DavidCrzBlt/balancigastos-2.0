@@ -9,10 +9,13 @@ from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.safestring import mark_safe
 from decimal import Decimal
 
 from .graficas import grafica_ingresos_vs_gastos_semanales, grafica_ingresos_vs_gastos, grafica_gastos_categoria
+from .reportes import generar_reporte
 
+import markdown
 import io
 from django.http import HttpResponse
 from openpyxl import Workbook
@@ -107,6 +110,15 @@ def registrar_proyecto(request):
 
     return render(request,"proyectos/registrar_proyecto.html",{'proyectos_form':registrar_proyectos_form})
 
+@login_required
+def reporte_proyecto_view(request,slug):
+    proyecto = get_object_or_404(Proyectos, slug=slug)
+    reporte_detallado = generar_reporte(proyecto.id)
+    reporte_detallado_html = markdown.markdown(reporte_detallado)
+    print(reporte_detallado_html)
+    reporte = mark_safe(reporte_detallado_html)
+    
+    return render(request,"proyectos/reporte_proyecto.html",{'reporte':reporte,'proyecto':proyecto})
 
 @login_required
 def toggle_estatus_proyecto(request, slug):
