@@ -78,6 +78,8 @@ TENANT_MODEL = "clientes.Cliente"
 
 TENANT_DOMAIN_MODEL = "clientes.DominioCliente"  
 
+SITE_ID = 2
+
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
