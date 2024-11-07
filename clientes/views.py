@@ -21,6 +21,8 @@ dominio_principal = os.getenv('MAIN_DOMAIN')
 def pagina_principal(request):
     # Obtener el dominio actual
     current_site = get_current_site(request)
+    print(f'Este es el current site: {current_site}')
+    print(f'Este es el dominio principal: {dominio_principal}')
 
     # Verificar si el dominio es localhost
     if current_site.domain == dominio_principal:
@@ -47,7 +49,7 @@ def crear_cliente(request):
             Site.objects.get_or_create(domain=dominio_cliente.domain, defaults={'name': tenant.nombre})
 
             messages.success(request, f'Cliente {tenant.nombre} creado exitosamente.')
-            return HttpResponseRedirect(f'http://{dominio_cliente.domain}/usuarios')
+            return HttpResponseRedirect(f'https://{dominio_cliente.domain}/usuarios')
             # En pruebas locales comentar arriba y descomentar abajo
             # return HttpResponseRedirect(f'http://{dominio_cliente.domain}:8000/usuarios')
     else:
