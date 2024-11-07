@@ -38,6 +38,8 @@ def crear_cliente(request):
             tenant.schema_name=tenant.nombre
             tenant.save()
 
+            if dominio_principal == 'www.balancigastos.com':
+                dominio_principal = 'balancigastos.com'
             # Crear el dominio asociado para el tenant
             dominio_cliente = DominioCliente()
             dominio_cliente.domain = f'{tenant.dominio}.{dominio_principal}'
