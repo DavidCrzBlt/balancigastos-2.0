@@ -118,8 +118,6 @@ WSGI_APPLICATION = 'balancigastos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE','False') == 'True'
-
 # Configuración de base de datos
 
 DATABASE_URL = os.getenv('DATABASE_URL')

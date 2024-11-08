@@ -17,6 +17,7 @@ import os
 ###--------------------------------------------------------------------------------###
 
 dominio_principal = os.getenv('MAIN_DOMAIN')
+environment_mode = os.getenv('ENVIRONMENT')
 
 def pagina_principal(request):
     # Obtener el dominio actual
@@ -31,22 +32,28 @@ def pagina_principal(request):
         return redirect('usuarios:login')  
 
 def crear_cliente(request):
+    pagina_principal(request)
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
+            if environment_mode == 'production':
+                dominio_completo = '.balancigastos.com'
+            else:
+                dominio_completo = '.localhost'
+
             tenant = form.save(commit=False)
             tenant.schema_name=tenant.nombre
+            tenant.dominio = tenant.dominio + dominio_completo
             tenant.save()
-
-            if dominio_principal == 'www.balancigastos.com':
-                dominio_principal = 'balancigastos.com'
+            print(f'Dominio de tenant completo: {tenant.dominio}')
+            
             # Crear el dominio asociado para el tenant
-            dominio_cliente = DominioCliente()
-            dominio_cliente.domain = f'{tenant.dominio}.{dominio_principal}'
-            dominio_cliente.tenant = tenant
-            dominio_cliente.is_primary = True 
+            dominio_cliente = DominioCliente(
+            domain = tenant.dominio,
+            tenant = tenant,
+            is_primary = True
+            )
             dominio_cliente.save()
-
             # Crear el objeto Site para el tenant
             Site.objects.get_or_create(domain=dominio_cliente.domain, defaults={'name': tenant.nombre})
 
@@ -59,7 +66,7 @@ def crear_cliente(request):
 
     return render(request, 'clientes/crear_cliente.html', {'form': form})
 
-
+#
 def lista_clientes(request):
     clientes = Cliente.objects.all()
     return render(request, 'clientes/lista_clientes.html', {'clientes': clientes})
