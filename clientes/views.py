@@ -4,7 +4,7 @@ from django.contrib.sites.models import Site
 from clientes.models import Cliente, DominioCliente
 from clientes.forms import ClienteForm
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 import os
@@ -19,12 +19,30 @@ import os
 dominio_principal = os.getenv('MAIN_DOMAIN')
 environment_mode = os.getenv('ENVIRONMENT')
 
+def get_subdomain(request: HttpRequest):
+    # Obtener el hostname completo (subdominio.dominio.com)
+    host = request.get_host()
+    
+    # Dividir el hostname por puntos
+    parts = host.split('.')
+    
+    # Asegurarse de que tiene el formato correcto (subdominio.dominio.tld)
+    if len(parts) >= 3:
+        # El subdominio será la primera parte
+        subdomain = parts[0]
+    else:
+        # Si no hay subdominio, devolver None o algún valor predeterminado
+        subdomain = None
+
+    return subdomain
+
 def pagina_principal(request):
     # Obtener el dominio actual
     current_site = get_current_site(request)
+    subdomain = get_subdomain(request)
     print(f'Este es el current site: {current_site}')
     print(f'Este es el dominio principal: {dominio_principal}')
-
+    print(f'Función de subdomain: {subdomain} ')
     # Verificar si el dominio es localhost
     if current_site.domain == dominio_principal:
         return redirect('clientes:crear_cliente') 
@@ -64,7 +82,7 @@ def crear_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'clientes/crear_cliente.html', {'form': form,'current_site':get_current_site(request),'dominio_principal':dominio_principal})
+    return render(request, 'clientes/crear_cliente.html', {'form': form,'current_site':get_current_site(request),'dominio_principal':dominio_principal,'subdomain':get_subdomain(request)})
 
 #
 def lista_clientes(request):
