@@ -5,8 +5,7 @@ from clientes.models import Cliente, DominioCliente
 from clientes.forms import ClienteForm
 
 from django.http import HttpResponseRedirect, HttpRequest
-from django.urls import reverse
-from django.contrib.sites.shortcuts import get_current_site
+
 import os
 
 
@@ -26,7 +25,10 @@ def get_subdomain(request: HttpRequest):
 
 def pagina_principal(request):
     # Dependiendo del dominio va a redireccionar a la página de usuarios o de clientes
-    if dominio_principal == get_subdomain(request) or 'localhost' == dominio_principal:
+    print(f'Dominio principal: {dominio_principal}')
+    print(f'Subdomain request: {get_subdomain(request)}')
+
+    if dominio_principal == get_subdomain(request):
         return redirect('clientes:crear_cliente')
     else:
         return redirect('usuarios:login')
@@ -68,7 +70,7 @@ def crear_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'clientes/crear_cliente.html', {'form': form,'current_site':get_current_site(request),'dominio_principal':dominio_principal,'subdomain':get_subdomain(request)})
+    return render(request, 'clientes/crear_cliente.html', {'form': form})
 
 #
 def lista_clientes(request):
