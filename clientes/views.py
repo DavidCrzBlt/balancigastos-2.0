@@ -64,7 +64,7 @@ def crear_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'clientes/crear_cliente.html', {'form': form})
+    return render(request, 'clientes/crear_cliente.html', {'form': form,'current_site':get_current_site(request),'dominio_principal':dominio_principal})
 
 #
 def lista_clientes(request):
