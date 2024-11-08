@@ -19,12 +19,14 @@ import os
 dominio_principal = os.getenv('MAIN_DOMAIN')
 environment_mode = os.getenv('ENVIRONMENT')
 
+def get_subdomain(request: HttpRequest):
+    # Obtener el hostname completo (subdominio.dominio.com)
+    subdomain = request.get_host()
+    return subdomain
+
 def pagina_principal(request):
-    # Obtener el dominio actual
-    current_site = get_current_site(request)
-    
-    # Verificar si el dominio es localhost o el dominio principal sin subdominios adicionales
-    if dominio_principal in current_site.domain or 'localhost' in current_site.domain:
+    # Dependiendo del dominio va a redireccionar a la página de usuarios o de clientes
+    if dominio_principal == get_subdomain(request) or 'localhost' == dominio_principal:
         return redirect('clientes:crear_cliente')
     else:
         return redirect('usuarios:login')
@@ -66,7 +68,7 @@ def crear_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'clientes/crear_cliente.html', {'form': form})
+    return render(request, 'clientes/crear_cliente.html', {'form': form,'current_site':get_current_site(request),'dominio_principal':dominio_principal,'subdomain':get_subdomain(request)})
 
 #
 def lista_clientes(request):
