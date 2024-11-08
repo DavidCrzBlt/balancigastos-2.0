@@ -19,37 +19,21 @@ import os
 dominio_principal = os.getenv('MAIN_DOMAIN')
 environment_mode = os.getenv('ENVIRONMENT')
 
-def get_subdomain(request: HttpRequest):
-    # Obtener el hostname completo (subdominio.dominio.com)
-    host = request.get_host()
-    
-    # Dividir el hostname por puntos
-    parts = host.split('.')
-    
-    # Asegurarse de que tiene el formato correcto (subdominio.dominio.tld)
-    if len(parts) >= 3:
-        # El subdominio será la primera parte
-        subdomain = parts[0]
-    else:
-        # Si no hay subdominio, devolver None o algún valor predeterminado
-        subdomain = None
-
-    return subdomain
-
 def pagina_principal(request):
     # Obtener el dominio actual
     current_site = get_current_site(request)
-    subdomain = get_subdomain(request)
-    print(f'Este es el current site: {current_site}')
-    print(f'Este es el dominio principal: {dominio_principal}')
-    print(f'Función de subdomain: {subdomain} ')
-    # Verificar si el dominio es localhost
-    if current_site.domain == dominio_principal:
-        return redirect('clientes:crear_cliente') 
+    
+    # Verificar si el dominio es localhost o el dominio principal sin subdominios adicionales
+    if dominio_principal in current_site.domain or 'localhost' in current_site.domain:
+        return redirect('clientes:crear_cliente')
     else:
-        return redirect('usuarios:login')  
+        return redirect('usuarios:login')
 
 def crear_cliente(request):
+
+    # Schema names and domain names have different validation rules. Underscores (_) and capital letters are permitted in schema names but they are illegal for domain names! On the other hand domain names may contain a dash (-) which is illegal for schema names!
+
+    # You must be careful if using schema names and domain names interchangeably in your multi-tenant applications! The tenant and domain model classes, creation and validation of input data are something that you need to handle yourself, possibly imposing additional constraints to the acceptable values!
     pagina_principal(request)
     if request.method == 'POST':
         form = ClienteForm(request.POST)
@@ -82,7 +66,7 @@ def crear_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'clientes/crear_cliente.html', {'form': form,'current_site':get_current_site(request),'dominio_principal':dominio_principal,'subdomain':get_subdomain(request)})
+    return render(request, 'clientes/crear_cliente.html', {'form': form})
 
 #
 def lista_clientes(request):
