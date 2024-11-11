@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 dominio_cliente.save()
 
                 # Crear un nuevo sitio para localhost
-                site = Site(domain=tenant_domain, name=tenant_name)
+                site = Site(id=2,domain=tenant_domain, name=tenant_name)
                 site.save()
 
                 self.stdout.write(self.style.SUCCESS('Successfully created global tenant: %s' % tenant_name))
