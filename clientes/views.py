@@ -44,6 +44,8 @@ def crear_cliente(request):
         if form.is_valid():
             if environment_mode == 'production':
                 dominio_completo = '.balancigastos.com'
+            elif environment_mode == 'staging':
+                dominio_completo = 'staging.balancigastos.com'
             else:
                 dominio_completo = '.localhost'
 
