@@ -55,9 +55,7 @@ SHARED_APPS = (
     'django.contrib.contenttypes',
 
     # everything below here is optional
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.sessions',
+    
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -65,6 +63,9 @@ SHARED_APPS = (
 
 TENANT_APPS = (
     # your tenant-specific apps
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.sessions',
     'proyectos.apps.ProyectosConfig',
     'contabilidad.apps.ContabilidadConfig',
     'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
