@@ -174,7 +174,7 @@ STATICFILES_DIRS = [
 
 # Si estás en producción
 ENVIRONMENT = os.getenv('ENVIRONMENT')
-if ENVIRONMENT == 'production':
+if ENVIRONMENT in ('production','staging'):
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

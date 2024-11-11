@@ -6,7 +6,7 @@
 {% include 'navbar_profile.html' %}
 
 {% if object %}
-<h4 class="h4 text-center mt-3 text-danger">Detalles {{ object.proyecto }}</h4>
+<h4 class="h4 text-center mt-3 text-success">Detalles {{ object.proyecto }}</h4>
 
 <ul class="nav nav-tabs">
   <li class="nav-item">
@@ -39,25 +39,33 @@
   </li>
 </ul>
 
-<hr class="border border-danger border-3 opacity-75">
+<hr class="border border-success border-3 opacity-75">
+<h4 class="h4 text-center mt-3 mb-3 text-success">Progreso</h4>
+<div class="progress" role="progressbar" aria-label="Default striped example" aria-valuenow="10" aria-valuemin="0"
+  aria-valuemax="100">
+  <div class="progress-bar progress-bar-striped" style="width: {{object.progreso}}%;">{{ object.progreso }}%</div>
+</div>
+<label for="customRange1" class="form-label">Control de progreso</label>
+<input type="range" class="form-range" id="customRange1">
+<hr class="border border-success border-3 opacity-75">
 
 <div class="row justify-content-evenly">
   <ul class="list-group col-4">
     <li class="list-group-item text-center"><strong>Ingresos</strong></li>
-    <hr class="border border-danger border-3 opacity-75">
+    <hr class="border border-success border-3 opacity-75">
     <li class="list-group-item list-group-item-primary"><strong>Ingresos Totales:</strong> {{ total_ingresos|pesos }}
     </li>
     <li class="list-group-item"><strong>Ingresos Totales IVA:</strong> {{ total_iva_ingresos|pesos }}</li>
 
 
-    <a href="{% url 'proyectos:export_project_details_to_excel' object.slug %}" class="btn btn-danger m-5">Descargar
+    <a href="{% url 'proyectos:export_project_details_to_excel' object.slug %}" class="btn btn-success m-5">Descargar
       proyecto en Excel</a>
 
   </ul>
 
   <ul class="list-group col-4">
     <li class="list-group-item text-center"><strong>Egresos</strong></li>
-    <hr class="border border-danger border-3 opacity-75">
+    <hr class="border border-success border-3 opacity-75">
     <li class="list-group-item list-group-item-primary"><strong>Gastos totales:</strong> {{ total_gastos|pesos }}</li>
     <li class="list-group-item"><strong>Gastos vehículos:</strong> {{ gastos_vehiculos|pesos }} </li>
     <li class="list-group-item"><strong>Gastos generales:</strong> {{ gastos_generales|pesos }} </li>
@@ -70,12 +78,16 @@
 
   <ul class="list-group col-4">
     <li class="list-group-item text-center"><strong>Resultados</strong></li>
-    <hr class="border border-danger border-3 opacity-75">
+    <hr class="border border-success border-3 opacity-75">
     <li class="list-group-item"><strong>Empresa:</strong> {{ object.empresa }}</li>
     <li class="list-group-item"><strong>Estatus:</strong>{% if object.estatus == True %} Activo {% else %} Inactivo
       {% endif %}</li>
     <li class="list-group-item"><strong>Nombre del proyecto:</strong> {{ object.proyecto }}</li>
     <li class="list-group-item"><strong>Clave de proyecto:</strong> {{ object.clave_proyecto }}</li>
+    <li class="list-group-item"><strong>Fecha de inicio:</strong> {{ object.fecha_creacion }}</li>
+    <li class="list-group-item"><strong>Fecha estimada de finalización:</strong> {{ object.fecha_fin_estimada }}</li>
+    <li class="list-group-item"><strong>Presupuesto estimado:</strong> {{ object.presupuesto_estimado|pesos }}</li>
+    <li class="list-group-item"><strong>Ganancia estimada:</strong> {{ object.ganancia_estimada|pesos }}</li>
     <li class="list-group-item list-group-item-primary"><strong>Resultado Neto:</strong> {{ total_neto|pesos }}</li>
     <li class="list-group-item"><strong>I.V.A. Neto:</strong> {{ iva_neto|pesos }}</li>
   </ul>
@@ -83,9 +95,9 @@
 </div>
 
 
-<hr class="border border-danger border-3 opacity-75 mt-5">
+<hr class="border border-success border-3 opacity-75 mt-5">
 
-<h4 class="h4 text-center mt-3 mb-3 text-danger">Tablero de {{ object.proyecto }}</h4>
+<h4 class="h4 text-center mt-3 mb-3 text-success">Tablero de {{ object.proyecto }}</h4>
 
 <div class="container mt-2">
   <div class="row">
