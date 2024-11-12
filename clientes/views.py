@@ -18,20 +18,20 @@ import os
 dominio_principal = os.getenv('MAIN_DOMAIN')
 environment_mode = os.getenv('ENVIRONMENT')
 
-def get_subdomain(request: HttpRequest):
-    # Obtener el hostname completo (subdominio.dominio.com)
-    subdomain = request.get_host()
-    return subdomain
+# def get_subdomain(request: HttpRequest):
+#     # Obtener el hostname completo (subdominio.dominio.com)
+#     subdomain = request.get_host()
+#     return subdomain
 
-def pagina_principal(request):
-    # Dependiendo del dominio va a redireccionar a la página de usuarios o de clientes
-    print(f'Dominio principal: {dominio_principal}')
-    print(f'Subdomain request: {get_subdomain(request)}')
+# def pagina_principal(request):
+#     # Dependiendo del dominio va a redireccionar a la página de usuarios o de clientes
+#     print(f'Dominio principal: {dominio_principal}')
+#     print(f'Subdomain request: {get_subdomain(request)}')
 
-    if dominio_principal == get_subdomain(request):
-        return redirect('clientes:crear_cliente')
-    else:
-        return redirect('usuarios:login')
+#     if dominio_principal == get_subdomain(request):
+#         return redirect('clientes:crear_cliente')
+#     else:
+#         return redirect('usuarios:login')
 
 def crear_cliente(request):
 
