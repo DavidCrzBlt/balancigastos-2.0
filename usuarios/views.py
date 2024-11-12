@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from .models import Profile
-
 from .forms import ProfileForm, UserRegisterForm
 
 # Create your views here.

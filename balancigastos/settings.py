@@ -185,12 +185,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-SESSION_COOKIE_SECURE = True 
-CSRF_COOKIE_SECURE = True    
+if ENVIRONMENT in ('production','staging'):
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
 
-LOGIN_URL = 'accounts/login/'
 
 LOGIN_REDIRECT_URL = 'proyectos:proyectos'
 
