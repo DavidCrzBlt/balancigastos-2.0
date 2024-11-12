@@ -185,9 +185,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Para staging en Heroku:
-SESSION_COOKIE_SECURE = True  # si estás usando HTTPS
-CSRF_COOKIE_SECURE = True     # si estás usando HTTPS
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+SESSION_COOKIE_SECURE = True 
+CSRF_COOKIE_SECURE = True    
 
 LOGIN_URL = 'accounts/login/'
 
