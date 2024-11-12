@@ -38,7 +38,7 @@ def crear_cliente(request):
     # Schema names and domain names have different validation rules. Underscores (_) and capital letters are permitted in schema names but they are illegal for domain names! On the other hand domain names may contain a dash (-) which is illegal for schema names!
 
     # You must be careful if using schema names and domain names interchangeably in your multi-tenant applications! The tenant and domain model classes, creation and validation of input data are something that you need to handle yourself, possibly imposing additional constraints to the acceptable values!
-    pagina_principal(request)
+    # pagina_principal(request)
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
