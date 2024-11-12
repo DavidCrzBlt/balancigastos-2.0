@@ -5,9 +5,9 @@
 
 {% include 'navbar_profile.html' %}
 
-<h4 class="h4 text-center text-danger mt-3">Registrar {{ categoria_operacion }} proyecto {{ proyecto.proyecto }}</h4>
+<h4 class="h4 text-center text-primary mt-3">Registrar {{ categoria_operacion }} proyecto {{ proyecto.proyecto }}</h4>
 
-<hr class="border border-danger border-3 opacity-75">
+<hr class="border border-primary border-3 opacity-75">
 
 {% if proyecto %}
 <ul class="nav nav-tabs">
@@ -62,7 +62,7 @@
 
         {{operaciones_form.as_p}}
 
-        <button type="submit" class="btn btn-danger">Registrar</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
 </div>
 
