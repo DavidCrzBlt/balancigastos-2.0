@@ -45,8 +45,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY',get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG','False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','127.0.0.1,localhost').split(',')
-
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','balancigastos.com,www.balancigastos.com').split(',')
+ALLOWED_HOSTS += [".balancigastos.com"]
 # Application definition
 
 SHARED_APPS = (
@@ -56,9 +56,7 @@ SHARED_APPS = (
     'django.contrib.contenttypes',
 
     # everything below here is optional
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.sessions',
+    
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -66,6 +64,9 @@ SHARED_APPS = (
 
 TENANT_APPS = (
     # your tenant-specific apps
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.sessions',
     'proyectos.apps.ProyectosConfig',
     'contabilidad.apps.ContabilidadConfig',
     'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
@@ -79,16 +80,18 @@ TENANT_MODEL = "clientes.Cliente"
 
 TENANT_DOMAIN_MODEL = "clientes.DominioCliente"  
 
+SITE_ID = 2
+
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'balancigastos.urls'
@@ -116,8 +119,6 @@ WSGI_APPLICATION = 'balancigastos.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE','False') == 'True'
 
 # Configuración de base de datos
 
@@ -160,7 +161,7 @@ TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -175,7 +176,7 @@ STATICFILES_DIRS = [
 
 # Si estás en producción
 ENVIRONMENT = os.getenv('ENVIRONMENT')
-if ENVIRONMENT == 'production':
+if ENVIRONMENT in ('production','staging'):
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -184,6 +185,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+if ENVIRONMENT in ('production','staging'):
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
 
 LOGIN_REDIRECT_URL = 'proyectos:proyectos'
 

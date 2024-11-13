@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from proyectos.views import ProyectosListView, ProyectosDetailView, export_proyectos_to_excel, export_project_details_to_excel, reporte_proyecto_view
+from proyectos.views import ProyectosListView, ProyectosDetailView, export_proyectos_to_excel, export_project_details_to_excel, actualizar_progreso, reporte_proyecto_view
 
 
 app_name = 'proyectos'
@@ -13,6 +13,7 @@ urlpatterns = [
     path('proyectos/<slug:slug>/toggle-estatus/', views.toggle_estatus_proyecto, name='toggle_estatus_proyecto'),
     path('exportar-proyectos/', export_proyectos_to_excel, name='export_proyectos_to_excel'),
     path('exportar-detalles-proyecto/<slug:proyecto_slug>/', export_project_details_to_excel, name='export_project_details_to_excel'),
+    path("actualizar-progreso/<slug:slug>/",actualizar_progreso,name="actualizar_progreso"),
     path('<slug:slug>/reporte-proyecto/',views.reporte_proyecto_view,name='reporte_proyecto'),
 
 ]

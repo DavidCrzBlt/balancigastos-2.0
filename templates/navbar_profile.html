@@ -1,54 +1,53 @@
 {% load static %}
-<div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+<div class="container-fluid bg-success-subtle">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{% url 'proyectos:proyectos' %}">
-                <img class="logo" src="{% static 'images/Cuatimar_logo.png' %}" alt="Logo" height="50px">
-                <p class="text-capitalize text-danger fs-4">| Bienvenido, {{ profile_username }}</p>
+                <img class="logo" src="{% static 'images/balancigastos.png' %}" alt="Logo">
             </a>
         </div>
         <div class="container">
-            <ul class="nav nav-tabs justify-content-end">
+            <ul class="nav nav-tabs justify-content-end fw-semibold">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Perfil
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu bg-success-subtle">
                         <li>
-                            <a class="dropdown-item" href="{% url 'usuarios:profile' %}">Mi perfil</a>
+                            <a class="dropdown-item text-dark fw-semibold" href="{% url 'usuarios:profile' %}">Mi perfil</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{% url 'usuarios:password_change' %}">Cambiar contraseña</a>
+                            <a class="dropdown-item text-dark fw-semibold" href="{% url 'usuarios:password_change' %}">Cambiar contraseña</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{% url 'usuarios:edit_profile' %}">Editar perfil</a>
+                            <a class="dropdown-item text-dark fw-semibold" href="{% url 'usuarios:edit_profile' %}">Editar perfil</a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'proyectos:proyectos' %}">Proyectos</a>
+                    <a class="nav-link text-dark" href="{% url 'proyectos:proyectos' %}">Proyectos</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Empleados
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu bg-success-subtle">
                         <li>
-                            <a class="dropdown-item" href="{% url 'empleados:empleados' %}">Empleados</a>
+                            <a class="dropdown-item text-dark fw-semibold" href="{% url 'empleados:empleados' %}">Empleados</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{% url 'empleados:registro_empleados' %}">Registrar empleado</a>
+                            <a class="dropdown-item text-dark fw-semibold" href="{% url 'empleados:registro_empleados' %}">Registrar empleado</a>
                         </li>
                     </ul>
                 </li>
@@ -58,4 +57,5 @@
             </ul>
         </div>
     </nav>
+    <p class="text-capitalize text-dark fs-4 pb-3"><strong>| Bienvenido, {{ profile_username }}</strong></p>
 </div>
