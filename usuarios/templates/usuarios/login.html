@@ -3,29 +3,23 @@
 {% block title %}Iniciar sesión{% endblock %}
 
 {% block content %}
-{% include 'navbar.html' %}
+
 <div class="container">
     <h2 class="my-4 text-center">Iniciar sesión</h2>
 
     <div class="container">
         <form method="post">
             {% csrf_token %}
-            {% load bootstrap_filters %}
-            <div class="mb-3">
-                <label for="username" class="form-label">Usuario</label>
-                {{ form.username|addclass:"form-control"|addid:"username" }}
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                {{ form.password|addclass:"form-control"|addid:"password" }}
-            </div>
+            
+            {{ form }}
+            
             <button type="submit" class="btn btn-primary">Ingresar</button>
-            <a href="{% url 'usuarios:signup' %}" class="btn btn-primary">Regístrate</a>
+            
         </form>
     </div>
-    <br>
+    
     <div class="container">
-        
+        <a href="{% url 'usuarios:signup' %}" class="btn btn-primary mt-3">Regístrate</a>
     </div>
 </div>
 {% endblock %}
