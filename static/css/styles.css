@@ -9,3 +9,78 @@
     z-index: 10;       /* Ensure the header stays above the body content */
     background-color: white; /* Ensure background doesn't overlap */
 }
+
+.logo{
+    height: 100px;
+    max-width: 100%;
+}
+
+/* Estilos base para inputs, selects y textarea */
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="password"],
+form input[type="date"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 16px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto de borde azul cuando el campo está en foco */
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="number"]:focus,
+form input[type="password"]:focus,
+form input[type="date"]:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #007bff; /* Azul de Bootstrap */
+    box-shadow: 0 0 9px rgba(0, 123, 255, 0.3); /* Sombra para resaltar el campo */
+    outline: none;
+}
+
+/* Estilo para etiquetas */
+form label {
+    font-weight:600;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Opcional: alineación del botón */
+form button[type="submit"] {
+    margin-top: 10px;
+}
+
+/* Aplica un estilo específico a las instrucciones de ayuda en formularios */
+.form-help-text {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-left: 3px solid #007bff;
+    border-radius: 4px;
+}
+
+/* Aplica el estilo a las instrucciones */
+form .helptext {
+    font-size: 14px;
+    color: #007bff;
+    margin-top: 5px;
+}
+
+/* Seleccionar el elemento con el atributo aria-describedby específico */
+[aria-describedby="id_usable_password_helptext"] {
+    display: none;
+}

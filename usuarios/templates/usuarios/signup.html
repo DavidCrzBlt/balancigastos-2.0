@@ -3,28 +3,12 @@
 {% block title %}Registrarse{% endblock %}
 
 {% block content %}
-{% include 'navbar.html' %}
+
 <div class="container">
     <h2 class="text-center">Registrarse</h2>
     <form method="post">
         {% csrf_token %}
-        {% load bootstrap_filters %}
-        <div class="mb-3">
-            <label for="username" class="form-label">Usuario</label>
-            {{ form.username|addclass:"form-control"|addid:"username"|addtype:"text" }}
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            {{ form.email|addclass:"form-control"|addid:"email"|addtype:"email" }}
-        </div>
-        <div class="mb-3">
-            <label for="password1" class="form-label">Contraseña</label>
-            {{ form.password1|addclass:"form-control"|addid:"password1"|addtype:"password" }}
-        </div>
-        <div class="mb-3">
-            <label for="password2" class="form-label">Confirmación de contraseña</label>
-            {{ form.password2|addclass:"form-control"|addid:"password2"|addtype:"password" }}
-        </div>
+        {{ form }}
         <button type="submit" class="btn btn-primary">Registrarse</button>
     </form>
 </div>

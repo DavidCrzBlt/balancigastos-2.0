@@ -287,3 +287,16 @@ def export_project_details_to_excel(request, proyecto_slug):
 # ---------------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------------- #
+
+def actualizar_progreso(request, slug):
+    if request.method == "POST":
+        progreso = request.POST.get('progreso')
+        
+        if progreso:
+            proyecto = get_object_or_404(Proyectos, slug=slug)
+            proyecto.progreso = progreso
+            proyecto.save()
+
+        return redirect('proyectos:detalles_proyecto', slug=proyecto.slug)  
+
+    return render(request, 'proyectos/proyectos_detalles.html')
