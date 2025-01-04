@@ -71,6 +71,7 @@ TENANT_APPS = (
     'equipos_y_vehiculos.apps.EquiposYVehiculosConfig',
     'usuarios.apps.UsuariosConfig',
     'empleados.apps.EmpleadosConfig',
+    'presupuestos.apps.PresupuestosConfig',
 )
 
 INSTALLED_APPS = SHARED_APPS + TENANT_APPS

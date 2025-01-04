@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %} Datos iniciales de presupuesto {% endblock %}
+{% block content %}
+
+<h4 class="h4 text-center text-primary mt-3">Registrar datos generales del presupuesto</h4>
+
+<hr class="border border-primary border-3 opacity-75">
+
+<div class="container text-center">
+    <form method="post">
+        {% csrf_token %}
+        {{ cabecera_presupuesto_form }}
+        <button type="submit" class="btn btn-primary">Siguiente</button>
+    </form>
+</div>
+
+{% endblock%}

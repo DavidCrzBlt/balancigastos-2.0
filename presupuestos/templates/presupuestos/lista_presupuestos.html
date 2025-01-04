@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Lista de presupuestos {% endblock %}
+{% block content %}
+
+<h4 class="h4 text-center text-primary mt-3">Lista de presupuestos</h4>
+
+<hr class="border border-primary border-3 opacity-75">
+
+<div class="container text-center">
+    <table>
+        
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre de presupuesto</th>
+                <th>Cliente</th>
+                <th>Responsable</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <th>Prueba Pres</th>
+                <th>Valeo</th>
+                <th>David</th>
+                <th>1000</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock%}

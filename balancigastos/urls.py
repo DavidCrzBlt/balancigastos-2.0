@@ -24,5 +24,6 @@ urlpatterns = [
     path('proyectos/',include("proyectos.urls")),
     path('empleados/',include("empleados.urls")),
     path('usuarios/',include("usuarios.urls")),
+    path('presupuestos/',include("presupuestos.urls")),
     path('',include("clientes.urls")),
 ]
