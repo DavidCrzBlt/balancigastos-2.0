@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import DatosPresupuestoForm
+from .models import DatosPresupuesto
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 
 # Create your views here.
 
@@ -9,10 +11,9 @@ def ingresar_datos_generales_presupuesto(request):
     cabecera_presupuesto_form = DatosPresupuestoForm()
     if request.method == "POST":
         cabecera_presupuesto_form = DatosPresupuestoForm(request.POST)
-        
         if cabecera_presupuesto_form.is_valid():
             cabecera_presupuesto_form.save()
-            return redirect('proyectos:proyectos')
+            return redirect('presupuestos:presupuestos')
         else:
             cabecera_presupuesto_form = DatosPresupuestoForm()
 
@@ -20,5 +21,5 @@ def ingresar_datos_generales_presupuesto(request):
 
 @login_required
 def lista_presupuestos(request):
-    lista_presupuestos = 1
+    lista_presupuestos = DatosPresupuesto.objects.all()
     return render(request,"presupuestos/lista_presupuestos.html",{'lista_presupuestos':lista_presupuestos})

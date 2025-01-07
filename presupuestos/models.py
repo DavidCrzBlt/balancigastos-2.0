@@ -1,6 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.utils import timezone
+from django.db.models import Max
 
 # Create your models here.
 
@@ -14,6 +15,25 @@ class DatosPresupuesto(models.Model):
     contacto = models.CharField(max_length=50)
     version = models.PositiveIntegerField(default=1,null=False)
     fecha = models.DateField(default=timezone.now)
+
+    def save(self, *args, **kwargs):
+        if not self.num_presupuesto:  # Solo generar si no existe
+            año_actual = timezone.now().year % 100
+            iniciales_empresa = "CCO"
+            ultimo_numero = (
+                DatosPresupuesto.objects.filter(num_presupuesto__startswith=f"{iniciales_empresa}{año_actual}")
+                .aggregate(max_num=Max("num_presupuesto"))["max_num"]
+            )
+
+            if ultimo_numero:
+                # Extraer el número secuencial y sumarle 1
+                secuencia = int(ultimo_numero[-5:]) + 1
+            else:
+                secuencia = 1  # Primer número del año
+
+            self.num_presupuesto = f"{iniciales_empresa}{año_actual}{str(secuencia).zfill(5)}"
+
+        super().save(*args, **kwargs)
 
 
 class PrecioUnitarioPresupuesto(models.Model):
