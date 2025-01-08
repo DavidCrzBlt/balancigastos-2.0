@@ -47,6 +47,25 @@ form textarea:focus {
     outline: none;
 }
 
+form .percent-field {
+    background-color: #f5f5f5; /* Fondo claro para diferenciar */
+    color: #212529; /* Texto oscuro */
+    border: 1px solid #adb5bd; /* Borde gris */
+    border-radius: 5px;
+}
+
+/* Estilo para campos deshabilitados */
+form input[disabled],
+form textarea[disabled],
+form select[disabled],
+form .disabled-field {
+    background-color: #4d4e4f; /* Color de fondo claro */
+    color: #6c757d; /* Texto gris */
+    border-color: #ced4da; /* Borde gris claro */
+    cursor: not-allowed; /* Cursor para indicar que está deshabilitado */
+    opacity: 1; /* Asegurar que no se vea translúcido */
+}
+
 /* Estilo para etiquetas */
 form label {
     font-weight:600;

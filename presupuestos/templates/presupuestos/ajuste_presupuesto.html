@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %} Ajuste presupuesto {{ presupuesto.nombre_proyecto }} {% endblock %}
+{% block content %}
+
+<h4 class="h4 text-center text-primary mt-3">Ajuste presupuesto {{ presupuesto.nombre_proyecto }} </h4>
+
+<hr class="border border-primary border-3 opacity-75">
+
+<div class="responsive-table">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Concepto</th>
+                <th>Unidad</th>
+                <th>Cantidad</th>
+                <th>P.U.</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in conceptos %}
+            <tr>
+                <td>{{ for_loop.counter }}</td>
+                <td>{{ item.concepto }}</td>
+                <td>{{ item.unidad }}</td>
+                <td><input type="number" name="qty" id="qty-input"></td>
+                <td>{{ item.precio_unitario }}</td>
+                <td><input type="number" name="subtotal" id="subtotal-input" aria-disabled="true"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a href="{% url 'presupuestos:ingresar_precios_unitarios' presupuesto.slug %}" class="btn btn-success">Agregar concepto</a>
+
+
+
+{% endblock%}

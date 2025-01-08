@@ -2,6 +2,7 @@ from django.db import models
 from decimal import Decimal
 from django.utils import timezone
 from django.db.models import Max
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -15,8 +16,10 @@ class DatosPresupuesto(models.Model):
     contacto = models.CharField(max_length=50)
     version = models.PositiveIntegerField(default=1,null=False)
     fecha = models.DateField(default=timezone.now)
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        self.slug = slugify(self.nombre_proyecto)
         if not self.num_presupuesto:  # Solo generar si no existe
             año_actual = timezone.now().year % 100
             iniciales_empresa = "CCO"
@@ -33,7 +36,10 @@ class DatosPresupuesto(models.Model):
 
             self.num_presupuesto = f"{iniciales_empresa}{año_actual}{str(secuencia).zfill(5)}"
 
-        super().save(*args, **kwargs)
+        super(DatosPresupuesto,self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.nombre_proyecto
 
 
 class PrecioUnitarioPresupuesto(models.Model):
@@ -45,7 +51,7 @@ class PrecioUnitarioPresupuesto(models.Model):
         ('pza','Pieza')
     ]
 
-    id_presupuesto = models.ForeignKey(DatosPresupuesto, related_name= 'precio_unitario',on_delete=models.CASCADE)
+    presupuesto = models.ForeignKey(DatosPresupuesto, related_name= 'precio_unitario',on_delete=models.CASCADE)
     concepto = models.concepto = models.TextField(null=False)
     unidad = models.CharField(max_length=30,choices=UNIDADES)
     materiales = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))

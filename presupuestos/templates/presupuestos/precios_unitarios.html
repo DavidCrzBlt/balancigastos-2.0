@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} Precios unitarios {% endblock %}
+{% load currency %}
+
+{% block content %}
+{% load static %}
+
+<h4 class="h4 text-center text-primary mt-3">Precios Unitarios</h4>
+
+<hr class="border border-primary border-3 opacity-75">
+
+<div class="container text-center">
+    <form method="post">
+        {% csrf_token %}
+        {{ precios_unitarios_form }}
+        <button type="submit" class="btn btn-primary">Agregar concepto</button>
+    </form>
+</div>
+
+<a href="{% url 'presupuestos:ajuste_presupuesto' presupuesto.slug %}" class="btn btn-success">Finalizar</a>
+
+<script type="text/javascript" src="{% static 'js/precio_unitario.js' %}"></script>
+
+{% endblock%}

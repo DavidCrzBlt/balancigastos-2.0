@@ -23,7 +23,7 @@
             {% for presupuesto in lista_presupuestos %}
             <tr>
                 <td scope="row">{{ forloop.counter }}</td>
-                <td>{{ presupuesto.num_presupuesto }}</td>
+                <td><a href="{% url 'presupuestos:ajuste_presupuesto' presupuesto.slug %}">{{ presupuesto.num_presupuesto }}</a></td>
                 <td>{{ presupuesto.nombre_proyecto }}</td>
                 <td>{{ presupuesto.cliente }}</td>
                 <td>{{ presupuesto.responsable }}</td>
@@ -32,6 +32,7 @@
             {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'presupuestos:ingresar_datos_cabecera_presupuesto' %}" class="btn btn-success">Nuevo presupuesto</a>
 </div>
 
 {% endblock%}
