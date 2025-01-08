@@ -62,6 +62,7 @@ class PrecioUnitarioPresupuesto(models.Model):
     costo_directo = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     costo_indirecto = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     costo_financiamiento = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
+    meses_financiamiento = models.DecimalField(max_digits=3,decimal_places=2,null=False,default=Decimal('0.00'))
     utilidad = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     precio_unitario = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
 

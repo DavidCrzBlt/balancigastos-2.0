@@ -14,7 +14,7 @@ class DatosPresupuestoForm(forms.ModelForm):
 class PreciosUnitariosForm(forms.ModelForm):
     class Meta:
         model = PrecioUnitarioPresupuesto
-        fields = ['concepto','unidad','materiales','mano_obra','examenes_med_dc3','equipos','epp','costo_directo','costo_indirecto','costo_financiamiento','utilidad','precio_unitario']
+        fields = ['concepto','unidad','materiales','mano_obra','examenes_med_dc3','equipos','epp','costo_directo','costo_indirecto','costo_financiamiento','meses_financiamiento','utilidad','precio_unitario']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -63,6 +63,12 @@ class PreciosUnitariosForm(forms.ModelForm):
             'placeholder': 'Ejemplo: 10',  # Texto guía en el campo
             'class': 'percent-field',       # Clase para estilizar si es necesario
             'title': 'Introduce el porcentaje de costo de financiamiento',
+        })
+
+        self.fields['meses_financiamiento'].widget.attrs.update({
+            'id': 'meses_financiamiento',
+            'placeholder': 'Ejemplo: 10',  
+            'title': 'Introduce el número de meses a financiar',
         })
 
         self.fields['utilidad'].widget.attrs.update({
