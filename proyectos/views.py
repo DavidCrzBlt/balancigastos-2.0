@@ -100,19 +100,24 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
         return context
 
 @login_required
-def registrar_proyecto(request):
-    registrar_proyectos_form = ProyectosForm()
+def registrar_proyecto(request, slug=None):
+    if slug:
+        # Si existe un slug, es un proyecto que se va a editar
+        proyecto = get_object_or_404(Proyectos, slug=slug)
+        registrar_proyectos_form = ProyectosForm(request.POST or None, instance=proyecto)
+    else:
+        # Si no existe slug, es un proyecto nuevo
+        registrar_proyectos_form = ProyectosForm(request.POST or None)
+    
     if request.method == "POST":
-        registrar_proyectos_form = ProyectosForm(request.POST)
-        
         if registrar_proyectos_form.is_valid():
+            # Guardar el proyecto (nuevo o editado)
             proyecto = registrar_proyectos_form.save()
-            slug = proyecto.slug
-            return redirect('proyectos:detalles_proyecto',slug=slug)
-        else:
-            registrar_proyectos_form = ProyectosForm()
-
-    return render(request,"proyectos/registrar_proyecto.html",{'proyectos_form':registrar_proyectos_form})
+            # Redirigir a los detalles del proyecto después de guardar
+            return redirect('proyectos:detalles_proyecto', slug=proyecto.slug)
+    
+    # Si el formulario no es válido o es un GET, mostrar el formulario
+    return render(request, "proyectos/registrar_proyecto.html", {'proyectos_form': registrar_proyectos_form})
 
 def eliminar_proyecto(request, slug):
     # Obtener el proyecto a través del slug

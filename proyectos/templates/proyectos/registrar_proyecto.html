@@ -2,6 +2,7 @@
 {% block title %}Registro de proyectos{% endblock %}
 
 {% block content %}
+{% load static %}
 
 <h4 class="h4 text-center text-danger">Registrar proyecto</h4>
 
@@ -17,5 +18,6 @@
     </form>
 </div>
 
+<script type="text/javascript" src="{% static 'js/validacion_proyectos.js' %}"></script>
 
 {% endblock %}
