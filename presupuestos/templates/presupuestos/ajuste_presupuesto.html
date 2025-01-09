@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block title %} Ajuste presupuesto {{ presupuesto.nombre_proyecto }} {% endblock %}
+{% load currency %}
 {% block content %}
+{% load static %}
 
 <h4 class="h4 text-center text-primary mt-3">Ajuste presupuesto {{ presupuesto.nombre_proyecto }} </h4>
 
@@ -21,20 +23,36 @@
         <tbody>
             {% for item in conceptos %}
             <tr>
-                <td>{{ for_loop.counter }}</td>
+                <td>{{ forloop.counter }}</td>
                 <td>{{ item.concepto }}</td>
                 <td>{{ item.unidad }}</td>
-                <td><input type="number" name="qty" id="qty-input"></td>
+                <td><input type="number"></td>
                 <td>{{ item.precio_unitario }}</td>
-                <td><input type="number" name="subtotal" id="subtotal-input" aria-disabled="true"></td>
+                <td><input type="number" class="form-control" readonly="readonly"></td>
             </tr>
             {% endfor %}
         </tbody>
+        <tr>
+            <td colspan="4"></td>
+            <td><strong>Subtotal:</strong></td>
+            <td id="subtotal-general"><strong></strong></td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td><strong>IVA 16%:</strong></td>
+            <td id="iva"><strong></strong></td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td><strong>Total:</strong></td>
+            <td id="total-general"><strong></strong></td>
+        </tr>
     </table>
 </div>
 
-<a href="{% url 'presupuestos:ingresar_precios_unitarios' presupuesto.slug %}" class="btn btn-success">Agregar concepto</a>
+<a href="{% url 'presupuestos:ingresar_precios_unitarios' presupuesto.slug %}" class="btn btn-success">Agregar
+    concepto</a>
 
-
+<script type="text/javascript" src="{% static 'js/subtotal_presupuesto.js' %}"></script>
 
 {% endblock%}

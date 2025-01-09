@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import DatosPresupuestoForm, PreciosUnitariosForm
-from .models import DatosPresupuesto,PrecioUnitarioPresupuesto
+from .models import DatosPresupuesto,PrecioUnitarioPresupuesto, HistorialPresupuesto
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
