@@ -8,6 +8,8 @@ app_name = 'proyectos'
 urlpatterns = [
     
     path("registrar-proyecto/",views.registrar_proyecto,name="registrar_proyecto"),
+    path("editar-proyecto/<slug:slug>",views.registrar_proyecto,name="editar_proyecto"),
+    path('eliminar_proyecto/<slug:slug>/', views.eliminar_proyecto, name='eliminar_proyecto'),
     path("",ProyectosListView.as_view(),name="proyectos"),
     path("proyectos/<slug:slug>/",ProyectosDetailView.as_view(),name="detalles_proyecto"),
     path('proyectos/<slug:slug>/toggle-estatus/', views.toggle_estatus_proyecto, name='toggle_estatus_proyecto'),
