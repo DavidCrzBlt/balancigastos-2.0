@@ -1,21 +1,23 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from .forms import ProyectosForm
-from django.views.generic import ListView, DetailView
-from .models import Proyectos
-from contabilidad.models import Ingresos, GastosGenerales, GastosVehiculos, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad
-from empleados.models import Salario, Asistencias
-from contabilidad.views import recalcular_totales_proyecto
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from decimal import Decimal
+from django.views.generic import ListView, DetailView
+from django.urls import reverse
+from django.http import HttpResponse, JsonResponse
 
+from .forms import ProyectosForm
+from .models import Proyectos
+
+from contabilidad.models import Ingresos, GastosGenerales, GastosVehiculos, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad
+from empleados.models import Salario, Asistencias
+from contabilidad.views import recalcular_totales_proyecto
 from .graficas import grafica_ingresos_vs_gastos_semanales, grafica_ingresos_vs_gastos, grafica_gastos_categoria
 
-import io
-from django.http import HttpResponse
+from decimal import Decimal
 from openpyxl import Workbook
+import io
 
 # Create your views here.
 
@@ -69,6 +71,10 @@ class ProyectosListView(LoginRequiredMixin,ListView):
         context['total_min'] = self.request.GET.get('total_min', '')
         context['total_max'] = self.request.GET.get('total_max', '')
 
+        # Generar la URL para eliminar proyecto y pasarlo al contexto
+        eliminar_url = reverse('proyectos:eliminar_proyecto', kwargs={'slug': 'slug_placeholder'})
+        context['eliminar_url_template'] = eliminar_url
+
         return context
 
     
@@ -87,26 +93,37 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
         context.update(totales)
         # ----------------------------------------------------------------------#
 
-        context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)
-        context['graph_json2'] = grafica_ingresos_vs_gastos(proyecto.id)
-        context['graph_json3'] = grafica_gastos_categoria(proyecto.id)
+        # context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)
+        # context['graph_json2'] = grafica_ingresos_vs_gastos(proyecto.id)
+        # context['graph_json3'] = grafica_gastos_categoria(proyecto.id)
 
         return context
 
 @login_required
-def registrar_proyecto(request):
-    registrar_proyectos_form = ProyectosForm()
+def registrar_proyecto(request, slug=None):
+    if slug:
+        # Si existe un slug, es un proyecto que se va a editar
+        proyecto = get_object_or_404(Proyectos, slug=slug)
+        registrar_proyectos_form = ProyectosForm(request.POST or None, instance=proyecto)
+    else:
+        # Si no existe slug, es un proyecto nuevo
+        registrar_proyectos_form = ProyectosForm(request.POST or None)
+    
     if request.method == "POST":
-        registrar_proyectos_form = ProyectosForm(request.POST)
-        
         if registrar_proyectos_form.is_valid():
-            registrar_proyectos_form.save()
-            return redirect('proyectos:proyectos')
-        else:
-            registrar_proyectos_form = ProyectosForm()
+            # Guardar el proyecto (nuevo o editado)
+            proyecto = registrar_proyectos_form.save()
+            # Redirigir a los detalles del proyecto después de guardar
+            return redirect('proyectos:detalles_proyecto', slug=proyecto.slug)
+    
+    # Si el formulario no es válido o es un GET, mostrar el formulario
+    return render(request, "proyectos/registrar_proyecto.html", {'proyectos_form': registrar_proyectos_form})
 
-    return render(request,"proyectos/registrar_proyecto.html",{'proyectos_form':registrar_proyectos_form})
-
+def eliminar_proyecto(request, slug):
+    # Obtener el proyecto a través del slug
+    proyecto = get_object_or_404(Proyectos, slug=slug)
+    proyecto.delete()
+    return redirect('proyectos:proyectos')
 
 @login_required
 def toggle_estatus_proyecto(request, slug):
