@@ -108,7 +108,7 @@
 
 <hr class="border border-success border-3 opacity-75 mt-5">
 
-<h4 class="h4 text-center mt-3 mb-3 text-success">Tablero de {{ object.proyecto }}</h4>
+<!-- <h4 class="h4 text-center mt-3 mb-3 text-success">Tablero de {{ object.proyecto }}</h4>
 
 <div class="container mt-2">
   <div class="row">
@@ -139,7 +139,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <script type="text/javascript" src="{% static 'js/barra_progreso.js' %}"></script>
 
@@ -150,12 +150,12 @@
   actualizarBarraProgreso(progreso);  
   });
 
-  var graph = JSON.parse('{{ graph_json|escapejs }}');
-  var graph2 = JSON.parse('{{ graph_json2|escapejs }}');
-  var graph3 = JSON.parse('{{ graph_json3|escapejs }}');
-  Plotly.newPlot('grafica1', graph.data, graph.layout);
-  Plotly.newPlot('grafica2', graph2.data, graph2.layout);
-  Plotly.newPlot('grafica3', graph3.data, graph3.layout);
+//  var graph = JSON.parse('{{ graph_json|escapejs }}');
+//  var graph2 = JSON.parse('{{ graph_json2|escapejs }}');
+//  var graph3 = JSON.parse('{{ graph_json3|escapejs }}');
+//  Plotly.newPlot('grafica1', graph.data, graph.layout);
+//  Plotly.newPlot('grafica2', graph2.data, graph2.layout);
+//  Plotly.newPlot('grafica3', graph3.data, graph3.layout);
 </script>
 
 {% endif %}

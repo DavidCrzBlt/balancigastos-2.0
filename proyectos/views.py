@@ -87,9 +87,9 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
         context.update(totales)
         # ----------------------------------------------------------------------#
 
-        context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)
-        context['graph_json2'] = grafica_ingresos_vs_gastos(proyecto.id)
-        context['graph_json3'] = grafica_gastos_categoria(proyecto.id)
+        # context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)
+        # context['graph_json2'] = grafica_ingresos_vs_gastos(proyecto.id)
+        # context['graph_json3'] = grafica_gastos_categoria(proyecto.id)
 
         return context
 
