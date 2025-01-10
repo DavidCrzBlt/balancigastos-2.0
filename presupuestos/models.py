@@ -64,6 +64,8 @@ class PrecioUnitarioPresupuesto(models.Model):
     meses_financiamiento = models.DecimalField(max_digits=5,decimal_places=2,null=False,default=Decimal('0.00'))
     utilidad = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     precio_unitario = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
+    cantidad = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('1.00'))
+    subtotal = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
 
 class HistorialPresupuesto(models.Model):
     presupuesto = models.ForeignKey(DatosPresupuesto,related_name="historial_presupuesto",on_delete=models.CASCADE)

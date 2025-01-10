@@ -14,7 +14,7 @@ class DatosPresupuestoForm(forms.ModelForm):
 class PreciosUnitariosForm(forms.ModelForm):
     class Meta:
         model = PrecioUnitarioPresupuesto
-        fields = ['concepto','unidad','materiales','mano_obra','examenes_med_dc3','equipos','epp','costo_directo','costo_indirecto','costo_financiamiento','meses_financiamiento','utilidad','precio_unitario']
+        fields = ['concepto','unidad','materiales','mano_obra','examenes_med_dc3','equipos','epp','costo_directo','costo_indirecto','costo_financiamiento','meses_financiamiento','utilidad','precio_unitario','cantidad','subtotal']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -38,19 +38,12 @@ class PreciosUnitariosForm(forms.ModelForm):
             'id': 'epp'
         })
 
-        ##-----------------------------------##
-        self.fields['precio_unitario'].widget.attrs.update({
-            'readonly': 'readonly',  # Desactiva el campo
-            'class': 'disabled-field',  # Clase para aplicar estilos CSS específicos
-            'id': 'precio_unitario'
+        self.fields['cantidad'].widget.attrs.update({
+            'id': 'cantidad'
         })
 
-        self.fields['costo_directo'].widget.attrs.update({
-            'readonly': 'readonly',  # Desactiva el campo
-            'class': 'disabled-field',  # Clase para aplicar estilos CSS específicos
-            'id': 'costo_directo'
-        })
-        ##-----------------------------------##
+        ## Campos que se deben llenar en porcentaje ##
+
         self.fields['costo_indirecto'].widget.attrs.update({
             'id': 'costo_indirecto',
             'placeholder': 'Ejemplo: 10',  # Texto guía en el campo
@@ -77,4 +70,24 @@ class PreciosUnitariosForm(forms.ModelForm):
             'class': 'percent-field',
             'title': 'Introduce el porcentaje de utilidad',
         })
+
+        ## Campos que están desactivados ##
+        self.fields['subtotal'].widget.attrs.update({
+            'readonly': 'readonly',  # Desactiva el campo
+            'class': 'disabled-field',  # Clase para aplicar estilos CSS específicos
+            'id': 'subtotal'
+        })
+
+        self.fields['precio_unitario'].widget.attrs.update({
+            'readonly': 'readonly',  # Desactiva el campo
+            'class': 'disabled-field',  # Clase para aplicar estilos CSS específicos
+            'id': 'precio_unitario'
+        })
+
+        self.fields['costo_directo'].widget.attrs.update({
+            'readonly': 'readonly',  # Desactiva el campo
+            'class': 'disabled-field',  # Clase para aplicar estilos CSS específicos
+            'id': 'costo_directo'
+        })
+        ##-----------------------------------##
     

@@ -4,6 +4,11 @@
 {% block content %}
 {% load static %}
 
+<script type="text/javascript">
+    var confirmarPresupuestoUrlTemplate = "{% if confirmar_presupuesto_url %}{{ confirmar_presupuesto_url }}{% endif %}";
+    console.log(confirmarPresupuestoUrlTemplate);
+ </script>
+
 <h4 class="h4 text-center text-primary mt-3">Ajuste presupuesto {{ presupuesto.nombre_proyecto }} </h4>
 
 <hr class="border border-primary border-3 opacity-75">
@@ -26,9 +31,9 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{ item.concepto }}</td>
                 <td>{{ item.unidad }}</td>
-                <td><input type="number"></td>
+                <td>{{ item.cantidad }}</td>
                 <td>{{ item.precio_unitario }}</td>
-                <td><input type="number" class="form-control" readonly="readonly"></td>
+                <td class="subtotal" data-id="{{item.id}}">{{ item.subtotal }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -53,8 +58,11 @@
 <a href="{% url 'presupuestos:ingresar_precios_unitarios' presupuesto.slug %}" class="btn btn-success">Agregar
     concepto</a>
 
-<a href="{% url 'presupuestos:confirmar_presupuesto' presupuesto.slug %}" class="btn btn-success">Confirmar presupuesto</a>
+<!-- <a href="{% url 'presupuestos:confirmar_presupuesto' presupuesto.slug %}" class="btn btn-success">Confirmar presupuesto</a> -->
+<button class="btn btn-success" id="confirmar-presupuesto" data-slug="{{presupuesto.slug}}">Confirmar presupuesto</button>
 
 <script type="text/javascript" src="{% static 'js/subtotal_presupuesto.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/confirmar_presupuesto.js' %}"></script>
 
 {% endblock%}

@@ -28,9 +28,20 @@ function calcular_precio_unitario(){
     precio_unitario.value = precio_unitario_suma.toFixed(2);
 }
 
+function calcular_subtotal() {
+    var precio_unitario = document.getElementById('precio_unitario').value||0;
+    var cantidad = document.getElementById('cantidad').value||0;
+
+    var calculo_subtotal = parseFloat(cantidad) * parseFloat(precio_unitario);
+
+    var subtotal = document.getElementById('subtotal');
+    subtotal.value = calculo_subtotal.toFixed(2);    
+}
+
 function ejecutar_calculos(){
     calcular_costo_directo();
     calcular_precio_unitario();
+    calcular_subtotal();
 }
 
 // Escucha eventos en los campos que afectan el cálculo
@@ -43,3 +54,4 @@ document.getElementById('costo_indirecto').addEventListener('input', ejecutar_ca
 document.getElementById('costo_financiamiento').addEventListener('input', ejecutar_calculos);
 document.getElementById('meses_financiamiento').addEventListener('input', ejecutar_calculos);
 document.getElementById('sobrecosto').addEventListener('input', ejecutar_calculos);
+document.getElementById('cantidad').addEventListener('input', ejecutar_calculos);
