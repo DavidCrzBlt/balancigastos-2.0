@@ -9,7 +9,7 @@ now = timezone.now().date()
 class DatosPresupuestoForm(forms.ModelForm):
     class Meta:
         model = DatosPresupuesto
-        fields = ['nombre_proyecto','cliente','responsable','contacto', 'version']
+        fields = ['nombre_proyecto','cliente','responsable','contacto']
 
 class PreciosUnitariosForm(forms.ModelForm):
     class Meta:

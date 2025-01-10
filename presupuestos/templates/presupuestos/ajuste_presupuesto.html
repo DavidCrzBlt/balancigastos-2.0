@@ -53,6 +53,8 @@
 <a href="{% url 'presupuestos:ingresar_precios_unitarios' presupuesto.slug %}" class="btn btn-success">Agregar
     concepto</a>
 
+<a href="{% url 'presupuestos:confirmar_presupuesto' presupuesto.slug %}" class="btn btn-success">Confirmar presupuesto</a>
+
 <script type="text/javascript" src="{% static 'js/subtotal_presupuesto.js' %}"></script>
 
 {% endblock%}

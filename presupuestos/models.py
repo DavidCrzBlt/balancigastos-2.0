@@ -14,7 +14,6 @@ class DatosPresupuesto(models.Model):
     cliente = models.CharField(max_length=40)
     responsable = models.CharField(max_length=40)
     contacto = models.CharField(max_length=50)
-    version = models.PositiveIntegerField(default=1,null=False)
     fecha = models.DateField(default=timezone.now)
     slug = models.SlugField(unique=True)
 
@@ -62,13 +61,13 @@ class PrecioUnitarioPresupuesto(models.Model):
     costo_directo = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     costo_indirecto = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     costo_financiamiento = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
-    meses_financiamiento = models.DecimalField(max_digits=3,decimal_places=2,null=False,default=Decimal('0.00'))
+    meses_financiamiento = models.DecimalField(max_digits=5,decimal_places=2,null=False,default=Decimal('0.00'))
     utilidad = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
     precio_unitario = models.DecimalField(max_digits=10,decimal_places=2,null=False,default=Decimal('0.00'))
 
 class HistorialPresupuesto(models.Model):
-    id_presupuesto = models.ForeignKey(DatosPresupuesto,related_name="historial_presupuesto",on_delete=models.CASCADE)
+    presupuesto = models.ForeignKey(DatosPresupuesto,related_name="historial_presupuesto",on_delete=models.CASCADE)
     version = models.PositiveIntegerField(default=1, null=False)
-    presupuesto = models.JSONField()
+    presupuesto_json = models.JSONField()
     fecha = models.DateField(default=timezone.now)
     

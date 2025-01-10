@@ -8,4 +8,6 @@ urlpatterns = [
     path("presupuesto/<slug:slug>/precios-unitarios/",views.ingresar_precios_unitarios,name="ingresar_precios_unitarios"),
     path("presupuesto/<slug:slug>/ajuste-presupuesto/",views.ajuste_presupuesto,name="ajuste_presupuesto"),
     path("",views.lista_presupuestos,name="presupuestos"),
+    path("confirmar-presupuesto/<slug:slug>",views.confirmar_presupuesto,name="confirmar_presupuesto"),
+    path("presupuesto/vista-presupuesto/<slug:slug>/<int:version>",views.presupuesto,name="presupuesto"),
 ]
