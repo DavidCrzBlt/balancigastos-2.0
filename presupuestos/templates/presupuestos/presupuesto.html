@@ -1,19 +1,60 @@
 {% extends 'base.html' %}
-{% block title %} Presupuesto {% endblock %}
+{% block title %} Presupuesto - {{ json_presupuesto.datos_cabecera.num_presupuesto }} {% endblock %}
 {% block content %}
 
-<h4 class="h4 text-center text-primary mt-3">Presupuesto</h4>
+{% load currency %}
+
+<h4 class="h4 text-center text-primary mt-3">Presupuesto - {{ json_presupuesto.datos_cabecera.num_presupuesto }}</h4>
 
 <hr class="border border-primary border-3 opacity-75">
 
 <div class="container">
-    <h5>Datos Cabecera:</h5>
-    <pre>{{ json_presupuesto.datos_cabecera  }}</pre>
+    
+    <div class="presupuesto">
+        <h1 class="h1-presupuesto">Presupuesto: {{ json_presupuesto.datos_cabecera.num_presupuesto }}</h1>
+    
+        <div class="header-presupuesto">
+            <p class="text-capitalize"><strong>Cliente:</strong> {{ json_presupuesto.datos_cabecera.cliente }}</p>
+            <p class="text-capitalize"><strong>Responsable:</strong> {{ json_presupuesto.datos_cabecera.responsable }}</p>
+            <p class="text-capitalize"><strong>Fecha:</strong> {{ json_presupuesto.datos_cabecera.fecha }}</p>
+        </div>
+    
+        <table class="table-presupuesto">
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partida in json_presupuesto.partidas_presupuesto %}
+                <tr>
+                    <td>{{ partida.concepto }}</td>
+                    <td>{{ partida.cantidad }}</td>
+                    <td class="text-capitalize">{{ partida.unidad }}</td>
+                    <td>{{ partida.precio_unitario|pesos }}</td>
+                    <td>{{ partida.subtotal|pesos }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <div class="totales-presupuesto">
+            <p><strong>Subtotal:</strong> {{ json_presupuesto.totales.subtotal|pesos }}</p>
+            <p><strong>IVA:</strong> {{ json_presupuesto.totales.iva|pesos }}</p>
+            <p><strong>Total General:</strong> {{ json_presupuesto.totales.total_general|pesos }}</p>
+        </div>
+    
+        <div class="footer-presupuesto">
+            <p>Gracias por confiar en nosotros. ¡Esperamos su aprobación!</p>
+        </div>
+    </div>
 
-    <h5>Partidas Presupuesto:</h5>
-    <pre>{{ json_presupuesto.partidas_presupuesto  }}</pre>
-
-    <h5>Totales:</h5>
-    <pre>{{ json_presupuesto.totales  }}</pre>
+    <a href="{% url 'presupuestos:generar_pdf' %}" class="btn btn-success">Generar pdf</a>
+    
 </div>
+
 {% endblock%}

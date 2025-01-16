@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+
 
 from .forms import DatosPresupuestoForm, PreciosUnitariosForm
 from .models import DatosPresupuesto,PrecioUnitarioPresupuesto, HistorialPresupuesto
+from .utils import generar_pdf
+
 
 import json
+
+
 # Create your views here.
 
 @login_required
@@ -47,12 +52,18 @@ def ingresar_precios_unitarios(request,slug):
 
 @login_required
 def ajuste_presupuesto(request,slug):
-    presupuesto = DatosPresupuesto.objects.get(slug=slug)
-    conceptos = PrecioUnitarioPresupuesto.objects.filter(presupuesto=presupuesto)
 
-     # Generar la URL para confirmar presupuesto y pasarlo al contexto
-    confirmar_presupuesto_url = reverse('presupuestos:confirmar_presupuesto', kwargs={'slug': 'slug_placeholder'})
-    return render(request,"presupuestos/ajuste_presupuesto.html",{'conceptos':conceptos,'presupuesto':presupuesto,'confirmar_presupuesto_url':confirmar_presupuesto_url})
+    presupuesto = DatosPresupuesto.objects.get(slug=slug)
+    historial_reciente = HistorialPresupuesto.objects.filter(presupuesto=presupuesto).order_by('-version').first()
+
+    if historial_reciente:
+        return redirect('presupuestos:presupuesto',slug=slug,version=historial_reciente.version)
+    else:
+        conceptos = PrecioUnitarioPresupuesto.objects.filter(presupuesto=presupuesto)
+
+        # Generar la URL para confirmar presupuesto y pasarlo al contexto
+        confirmar_presupuesto_url = reverse('presupuestos:confirmar_presupuesto', kwargs={'slug': 'slug_placeholder'})
+        return render(request,"presupuestos/ajuste_presupuesto.html",{'conceptos':conceptos,'presupuesto':presupuesto,'confirmar_presupuesto_url':confirmar_presupuesto_url})
 
 @login_required
 def confirmar_presupuesto(request,slug):
@@ -148,3 +159,18 @@ def presupuesto(request,slug,version):
 def lista_presupuestos(request):
     lista_presupuestos = DatosPresupuesto.objects.all()
     return render(request,"presupuestos/lista_presupuestos.html",{'lista_presupuestos':lista_presupuestos})
+
+def generar_pdf_vista(request):
+    # Datos para el contexto
+    context = {
+        "titulo": "Este es un PDF generado en Django",
+        "contenido": "WeasyPrint es una herramienta poderosa para crear PDFs."
+    }
+    # Generar el PDF
+    pdf_path = generar_pdf("presupuestos/presupuesto_pdf.html", context, "ejemplo.pdf")
+    
+    # Devolver el archivo PDF como respuesta
+    with open(pdf_path, "rb") as pdf_file:
+        response = HttpResponse(pdf_file.read(), content_type="application/pdf")
+        response['Content-Disposition'] = f'inline; filename="ejemplo.pdf"'
+        return response

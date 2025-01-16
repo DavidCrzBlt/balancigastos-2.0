@@ -103,3 +103,37 @@ form .helptext {
 [aria-describedby="id_usable_password_helptext"] {
     display: none;
 }
+
+.h1-presupuesto {
+    text-align: center;
+    color: #007bff;
+}
+.presupuesto {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.header-presupuesto, .footer-presupuesto {
+    text-align: center;
+    margin: 10px 0;
+}
+.table-presupuesto{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.table-presupuesto table, .table-presupuesto th, .table-presupuesto td {
+    border: 1px solid #000;
+}
+.table-presupuesto th, .table-presupuesto td {
+    padding: 8px;
+    text-align: left;
+}
+.table-presupuesto th {
+    background-color: #007bff;
+    color: white;
+}
+.totales-presupuesto {
+    margin-top: 20px;
+    text-align: right;
+}

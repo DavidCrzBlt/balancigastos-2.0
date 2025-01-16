@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto - {{ json_presupuesto.datos_cabecera.num_presupuesto }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .presupuesto h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .presupuesto {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .presupuesto > .header, .footer {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .presupuesto table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .presupuesto table, th, td {
+            border: 1px solid #000;
+        }
+        .presupuesto th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .presupuesto th {
+            background-color: #007bff;
+            color: white;
+        }
+        .presupuesto .totales {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ titulo }}</h1>
+    <p>{{ contenido }}</p>
+</body>
+<!-- <body>
+
+    <div class="container">
+        <h1>Presupuesto: {{ json_presupuesto.datos_cabecera.num_presupuesto }}</h1>
+
+        <div class="header">
+            <p><strong>Cliente:</strong> {{ json_presupuesto.datos_cabecera.cliente }}</p>
+            <p><strong>Responsable:</strong> {{ json_presupuesto.datos_cabecera.responsable }}</p>
+            <p><strong>Fecha:</strong> {{ json_presupuesto.datos_cabecera.fecha }}</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partida in json_presupuesto.partidas_presupuesto %}
+                    <tr>
+                        <td>{{ partida.concepto }}</td>
+                        <td>{{ partida.cantidad }}</td>
+                        <td>{{ partida.unidad }}</td>
+                        <td>{{ partida.precio_unitario }}</td>
+                        <td>{{ partida.subtotal }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="totales">
+            <p><strong>Subtotal:</strong> {{ json_presupuesto.totales.subtotal }}</p>
+            <p><strong>IVA:</strong> {{ json_presupuesto.totales.iva }}</p>
+            <p><strong>Total General:</strong> {{ json_presupuesto.totales.total_general }}</p>
+        </div>
+
+        <div class="footer">
+            <p>Gracias por confiar en nosotros. ¡Esperamos su aprobación!</p>
+        </div>
+    </div>
+
+</body> -->
+</html>
