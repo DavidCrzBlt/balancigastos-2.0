@@ -3,15 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 
-
 from .forms import DatosPresupuestoForm, PreciosUnitariosForm
 from .models import DatosPresupuesto,PrecioUnitarioPresupuesto, HistorialPresupuesto
+from usuarios.models import Profile
 from .utils import generar_pdf
 
-
 import json
-
-
 # Create your views here.
 
 @login_required
@@ -153,24 +150,48 @@ def presupuesto(request,slug,version):
 
     json_presupuesto = version_presupuesto.presupuesto_json
 
-    return render(request,"presupuestos/presupuesto.html",{"json_presupuesto":json_presupuesto})
+    return render(request,"presupuestos/presupuesto.html",{"json_presupuesto":json_presupuesto,"slug":slug,"version":version})
 
 @login_required
 def lista_presupuestos(request):
     lista_presupuestos = DatosPresupuesto.objects.all()
     return render(request,"presupuestos/lista_presupuestos.html",{'lista_presupuestos':lista_presupuestos})
 
-def generar_pdf_vista(request):
+@login_required
+def generar_pdf_vista(request, slug, version):
+
+    presupuesto = DatosPresupuesto.objects.get(slug=slug)
+    print_version = HistorialPresupuesto.objects.get(presupuesto=presupuesto,version=version)
+    profile = Profile.objects.get(user=request.user)
+
+    imagen_url = profile.profile_picture.url  # Esto te da la URL relativa
+
+    absolute_imagen_url = request.build_absolute_uri(imagen_url)
+    
     # Datos para el contexto
-    context = {
-        "titulo": "Este es un PDF generado en Django",
-        "contenido": "WeasyPrint es una herramienta poderosa para crear PDFs."
+    context = print_version.presupuesto_json
+
+    datos_cabecera = context["datos_cabecera"]
+    datos_pu = context["partidas_presupuesto"]
+    totales = context["totales"]
+    datos_cotizacion = {
+        "num_presupuesto":datos_cabecera["num_presupuesto"],
+        "cliente":datos_cabecera["cliente"],
+        "responsable":datos_cabecera["responsable"],
+        "fecha":datos_cabecera["fecha"],
+        "datos_pu":datos_pu,
+        "subtotal":totales["subtotal"],
+        "iva":totales["iva"],
+        "total":totales["total_general"],
+        'absolute_imagen_url': absolute_imagen_url
     }
+
+    filename = f'{presupuesto.num_presupuesto}.pdf'
     # Generar el PDF
-    pdf_path = generar_pdf("presupuestos/presupuesto_pdf.html", context, "ejemplo.pdf")
+    pdf_path = generar_pdf("presupuestos/presupuesto_sample.html", datos_cotizacion, filename,request,profile)
     
     # Devolver el archivo PDF como respuesta
     with open(pdf_path, "rb") as pdf_file:
         response = HttpResponse(pdf_file.read(), content_type="application/pdf")
-        response['Content-Disposition'] = f'inline; filename="ejemplo.pdf"'
+        response['Content-Disposition'] = f'inline; filename={filename}'
         return response

@@ -53,8 +53,8 @@
         </div>
     </div>
 
-    <a href="{% url 'presupuestos:generar_pdf' %}" class="btn btn-success">Generar pdf</a>
+    <a href="{% url 'presupuestos:generar_pdf' slug version %}"  target="_blank" class="btn btn-success">Generar pdf</a>
     
 </div>
 
-{% endblock%}
+{% endblock %}

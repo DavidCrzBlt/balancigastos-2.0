@@ -10,5 +10,5 @@ urlpatterns = [
     path("",views.lista_presupuestos,name="presupuestos"),
     path("confirmar-presupuesto/<slug:slug>",views.confirmar_presupuesto,name="confirmar_presupuesto"),
     path("presupuesto/vista-presupuesto/<slug:slug>/<int:version>",views.presupuesto,name="presupuesto"),
-    path("presupuesto/generar-pdf-vista",views.generar_pdf_vista,name="generar_pdf"),
+    path("presupuesto/generar-pdf-vista/<slug:slug>/<int:version>",views.generar_pdf_vista,name="generar_pdf"),
 ]

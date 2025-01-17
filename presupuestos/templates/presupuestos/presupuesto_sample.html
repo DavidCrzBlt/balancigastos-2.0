@@ -1,0 +1,78 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'css/presupuestos.css' %}" media="print" rel="stylesheet">
+    <title>Invoice</title>
+    
+    <meta name="description" content="Invoice demo sample">
+    {% load currency %}
+</head>
+
+<body>
+    <h1>Invoice</h1>
+    <img class="logo" src="{{ absolute_imagen_url }}" alt="Logo" style="width: 150px; height: auto;">
+    <aside>
+        <address id="from">
+            WeasyPrint
+            26 rue Emile Decorps
+            69100 Villeurbanne
+            France
+        </address>
+
+        <address id="to">
+            Our awesome developers
+            From all around the world
+            Earth
+        </address>
+    </aside>
+
+    <dl id="informations">
+        <dt>Número de presupuesto</dt>
+        <dd>{{ num_presupuesto}}</dd>
+        <dt>Fecha</dt>
+        <dd>{{ fecha }}</dd>
+    </dl>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Unidad</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for partida in datos_pu %}
+            <tr>
+                <td>{{partida.concepto}}</td>
+                <td>{{partida.unidad}}</td>
+                <td>{{partida.cantidad}}</td>
+                <td>{{partida.precio_unitario|pesos}}</td>
+                <td>{{partida.subtotal|pesos}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tr>
+            <td colspan="3"></td>
+            <td><strong>Subtotal:</strong></td>
+            <td id="subtotal-general"><strong>{{subtotal|pesos}}</strong></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td><strong>IVA 16%:</strong></td>
+            <td id="iva"><strong>{{iva|pesos}}</strong></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td><strong>Total:</strong></td>
+            <td id="total-general"><strong>{{total|pesos}}</strong></td>
+        </tr>
+    </table>
+
+    
+</body>
+
+</html>
