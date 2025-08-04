@@ -51,7 +51,8 @@ ALLOWED_HOSTS += [".balancigastos.com"]
 SHARED_APPS = (
     'django_tenants',  # mandatory
     'clientes', # you must list the app where your tenant model resides in
-
+    'webpublica',
+    'core',
     'django.contrib.contenttypes',
 
     # everything below here is optional
@@ -193,7 +194,6 @@ if ENVIRONMENT in ('production','staging'):
 else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
-
 
 LOGIN_REDIRECT_URL = 'proyectos:proyectos'
 

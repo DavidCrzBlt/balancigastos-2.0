@@ -13,6 +13,9 @@ from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
 from django.contrib import messages
 
+from core.views import FormularioGenericoView
+from django.urls import reverse_lazy
+
 import openpyxl
 
 import re
@@ -189,21 +192,13 @@ class EmpleadosListView(LoginRequiredMixin,ListView):
 ### ---------------------- Funciones de registro ----------------------------- ###
 ### -------------------------------------------------------------------------- ###
 
-@login_required
-def registro_empleados(request):
+class RegistroEmpleadoView(LoginRequiredMixin, FormularioGenericoView):
+    form_class = EmpleadosForm
+    success_url = reverse_lazy('empleados:empleados')
+    page_title = 'Registro de Empleados'
+    form_title = 'Registrar empleado'
+    button_text = 'Registrar empleado'
 
-    empleados = Empleados.objects.all()
-
-    if request.method == "POST":
-        empleados_form = EmpleadosForm(request.POST)
-
-        if empleados_form.is_valid():
-            empleados_form.save()
-            return redirect('empleados:empleados')
-    else:
-        empleados_form = EmpleadosForm()
-
-    return render(request,'empleados/registrar_empleados.html',{'empleados_form':empleados_form,'empleados':empleados})
 
 @login_required
 def registro_asistencias(request,slug):

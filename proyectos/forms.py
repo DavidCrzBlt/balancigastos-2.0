@@ -1,6 +1,8 @@
 from django import forms
 from .models import Proyectos
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
+
 
 class ProyectosForm(forms.ModelForm):
     class Meta:
@@ -15,3 +17,13 @@ class ProyectosForm(forms.ModelForm):
             'presupuesto_estimado': forms.NumberInput(attrs={'required': True}),
             'ganancia_estimada': forms.NumberInput(attrs={'required': True}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        proyecto = cleaned_data.get('proyecto')
+        if proyecto:
+            slug = slugify(proyecto)
+            if Proyectos.objects.filter(slug=slug).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError("Ya existe un proyecto con este nombre (slug duplicado).")
+        return cleaned_data
+

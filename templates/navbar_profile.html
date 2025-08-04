@@ -1,9 +1,9 @@
 {% load static %}
-<div class="container-fluid bg-success-subtle">
+<div class="container-fluid">
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{% url 'proyectos:proyectos' %}">
-                <img class="logo" src="{% static 'images/balancigastos.png' %}" alt="Logo">
+                <img src="{% static 'images/logo_balancigastos_formal_horizontal.svg' %}" alt="Logo Balancigastos" style="height: 80px; margin-right: 10px;">
             </a>
         </div>
         <div class="container">
@@ -13,7 +13,7 @@
                         aria-expanded="false">
                         Perfil
                     </a>
-                    <ul class="dropdown-menu bg-success-subtle">
+                    <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item text-dark fw-semibold" href="{% url 'usuarios:profile' %}">Mi perfil</a>
                         </li>
@@ -39,7 +39,7 @@
                         aria-expanded="false">
                         Empleados
                     </a>
-                    <ul class="dropdown-menu bg-success-subtle">
+                    <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item text-dark fw-semibold" href="{% url 'empleados:empleados' %}">Empleados</a>
                         </li>
@@ -52,10 +52,9 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-danger" href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
+                    <a class="nav-link text-dark" href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <p class="text-capitalize text-dark fs-4 pb-3"><strong>| Bienvenido, {{ profile_username }}</strong></p>
 </div>

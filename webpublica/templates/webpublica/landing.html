@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Balancigastos</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body class="bg-white text-dark">
+
+  <div class="container-landing">
+    <!-- Header -->
+    <header class="d-flex align-items-center justify-content-start px-4 py-5">
+      <img src="{% static 'images/logo_balancigastos_formal_horizontal.svg' %}" alt="Logo Balancigastos" style="height: 80px; margin-right: 10px;">
+    </header>
+    <!-- Hero Section -->
+    <section class="container py-1 d-flex flex-column flex-md-row align-items-center justify-content-between">
+      <!-- Text Section -->
+      <div class="text-section mb-4 mb-md-0">
+        <h1 class="display-5 fw-bold mb-3">Simplifica el manejo de tus gastos</h1>
+        <p class="fs-5 text-body-color">Con nuestra herramienta, gestionar tus gastos e ingresos es fácil y rápido.</p>
+        <a href="#" class="btn btn-success btn-lg mt-3 px-4 py-2">Comienza ahora</a>
+      </div>
+      <!-- Image Section -->
+      <div class="image-section">
+        <img src="{% static 'images/laptop-landing.png' %}" alt="Dashboard" class="img-fluid" style="max-width: 500px;">
+      </div>
+    </section>
+    <br>
+    <br>
+    <br>
+    <!-- Burbujas decorativas -->
+    <div class="bubble green-bubble"></div>
+    <div class="bubble purple-bubble"></div>
+  </div>
+
+</body>
+</html>

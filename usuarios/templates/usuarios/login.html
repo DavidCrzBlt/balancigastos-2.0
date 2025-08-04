@@ -4,22 +4,25 @@
 
 {% block content %}
 
-<div class="container">
-    <h2 class="my-4 text-center">Iniciar sesión</h2>
-
-    <div class="container">
+<div class="container py-4">
+    
+    <div class="card border-secondary col-md-6 offset-md-3 p-4 text-center">
+        <h2 class="my-4 text-center text-dark">Iniciar sesión</h2>
+        <hr class="border border-secondary border-3 opacity-75">
         <form method="post">
             {% csrf_token %}
-            
+
             {{ form }}
-            
-            <button type="submit" class="btn btn-primary">Ingresar</button>
-            
+
+            <button type="submit" class="btn btn-primary fw-semibold">Ingresar</button>
+
         </form>
+
+        <div class="container px-4 text-center">
+            <a href="{% url 'usuarios:signup' %}" class="btn btn-primary mt-3  fw-semibold">Regístrate</a>
+        </div>
     </div>
-    
-    <div class="container">
-        <a href="{% url 'usuarios:signup' %}" class="btn btn-primary mt-3">Regístrate</a>
-    </div>
+
+
 </div>
 {% endblock %}

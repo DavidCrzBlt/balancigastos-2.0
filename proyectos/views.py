@@ -4,12 +4,14 @@ from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
-from django.urls import reverse
+from django.views.generic.edit import UpdateView
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse, JsonResponse
 
 from .forms import ProyectosForm
 from .models import Proyectos
 
+from core.views import FormularioGenericoView
 from contabilidad.models import Ingresos, GastosGenerales, GastosVehiculos, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad
 from empleados.models import Salario, Asistencias
 from contabilidad.views import recalcular_totales_proyecto
@@ -99,25 +101,55 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
 
         return context
 
-@login_required
-def registrar_proyecto(request, slug=None):
-    if slug:
-        # Si existe un slug, es un proyecto que se va a editar
-        proyecto = get_object_or_404(Proyectos, slug=slug)
-        registrar_proyectos_form = ProyectosForm(request.POST or None, instance=proyecto)
-    else:
-        # Si no existe slug, es un proyecto nuevo
-        registrar_proyectos_form = ProyectosForm(request.POST or None)
+# @login_required
+# def registrar_proyecto(request, slug=None):
+#     if slug:
+#         # Si existe un slug, es un proyecto que se va a editar
+#         proyecto = get_object_or_404(Proyectos, slug=slug)
+#         registrar_proyectos_form = ProyectosForm(request.POST or None, instance=proyecto)
+#     else:
+#         # Si no existe slug, es un proyecto nuevo
+#         registrar_proyectos_form = ProyectosForm(request.POST or None)
     
-    if request.method == "POST":
-        if registrar_proyectos_form.is_valid():
-            # Guardar el proyecto (nuevo o editado)
-            proyecto = registrar_proyectos_form.save()
-            # Redirigir a los detalles del proyecto después de guardar
-            return redirect('proyectos:detalles_proyecto', slug=proyecto.slug)
+#     if request.method == "POST":
+#         if registrar_proyectos_form.is_valid():
+#             # Guardar el proyecto (nuevo o editado)
+#             proyecto = registrar_proyectos_form.save()
+#             # Redirigir a los detalles del proyecto después de guardar
+#             return redirect('proyectos:detalles_proyecto', slug=proyecto.slug)
     
-    # Si el formulario no es válido o es un GET, mostrar el formulario
-    return render(request, "proyectos/registrar_proyecto.html", {'proyectos_form': registrar_proyectos_form})
+#     # Si el formulario no es válido o es un GET, mostrar el formulario
+#     return render(request, "proyectos/registrar_proyecto.html", {'proyectos_form': registrar_proyectos_form})
+
+
+
+class CrearProyectoView(LoginRequiredMixin, FormularioGenericoView):
+    form_class = ProyectosForm
+    page_title = 'Registro de proyectos'
+    form_title = 'Registrar nuevo proyecto'
+    button_text = 'Registrar proyecto'
+
+    def get_success_url(self):
+        return reverse('proyectos:detalles_proyecto', kwargs={'slug': self.object.slug})
+
+class EditarProyectoView(LoginRequiredMixin, UpdateView):
+    model = Proyectos
+    form_class = ProyectosForm
+    template_name = 'form_template.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_success_url(self):
+        return reverse_lazy('proyectos:detalles_proyecto', kwargs={'slug': self.object.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Editar proyecto'
+        context['form_title'] = 'Modificar proyecto'
+        context['button_text'] = 'Actualizar proyecto'
+        return context
+
+
 
 def eliminar_proyecto(request, slug):
     # Obtener el proyecto a través del slug

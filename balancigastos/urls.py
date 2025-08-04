@@ -24,5 +24,7 @@ urlpatterns = [
     path('proyectos/',include("proyectos.urls")),
     path('empleados/',include("empleados.urls")),
     path('usuarios/',include("usuarios.urls")),
-    path('',include("clientes.urls")),
+    path('clientes/',include("clientes.urls")),
+    path('',include("webpublica.urls")),
+
 ]

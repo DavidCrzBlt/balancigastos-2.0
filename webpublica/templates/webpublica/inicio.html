@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Balancigastos | Inicio</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+
+<body class="bg-white text-dark">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-4 border-bottom shadow-sm">
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="{% static 'images/logo_balancigastos_formal_horizontal.svg' %}" alt="Logo Balancigastos"
+        style="height: 80px; margin-right: 10px;">
+    </a>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link fw-semibold" href="#features">Características</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" href="#como-funciona">Cómo funciona</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" href="#">Iniciar sesión</a></li>
+        <li class="nav-item"><a class="btn btn-outline-primary ms-2 fw-semibold" href="#">Crear cuenta</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- HERO -->
+  <section class="container py-5 text-center row">
+    <div class="col-md-8 py-5">
+      <h1 class="display-4 fw-bold">Controla tus gastos por proyecto en tiempo real</h1>
+      <p class="lead">BalanciGastos te permite visualizar la rentabilidad de tus proyectos, registrar gastos e ingresos
+        fácilmente y generar reportes automáticos con ayuda de IA.</p>
+      <a href="#" class="btn btn-success btn-lg mt-3 px-4 fw-semibold text-light">Comienza ahora</a>
+      <a href="#" class="btn btn-outline-secondary btn-lg mt-3 ms-2 px-4 fw-semibold">Solicita una demo</a>
+    </div>
+    <div class="mt-5 col-md-4">
+      <img src="{% static 'images/dashboard_dark_style.png' %}" class="img-fluid rounded shadow"
+        style="max-width: 400px;" alt="Vista previa del sistema">
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="bg-light py-5">
+    <div class="container text-center">
+      <h2 class="mb-4 fw-bold">Beneficios clave</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Visualización clara</h5>
+          <p>Gastos e ingresos por proyecto, siempre actualizados.</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Multiusuario y subdominios</h5>
+          <p>Cada empresa con su propio entorno y equipo de trabajo.</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Reportes automáticos</h5>
+          <p>IA integrada para análisis y resúmenes de rendimiento.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="como-funciona" class="py-5 bg-white text-center">
+    <div class="container">
+      <h2 class="mb-5 fw-bold">¿Cómo funciona?</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+          <div class="step-box">
+            <div class="circle-number">1</div>
+            <h5 class="mt-3 fw-semibold">Regístrate</h5>
+            <p class="text-muted">Crea una cuenta gratuita y se generará tu subdominio.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="step-box">
+            <div class="circle-number">2</div>
+            <h5 class="mt-3 fw-semibold">Añade proyectos</h5>
+            <p class="text-muted">Invita a tu equipo y organiza tus gastos por cliente.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="step-box">
+            <div class="circle-number">3</div>
+            <h5 class="mt-3 fw-semibold">Monitorea</h5>
+            <p class="text-muted">Visualiza reportes y dashboards en tiempo real.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="bg-light py-5 text-center">
+    <div class="container">
+      <h3 class="fw-bold">Comienza a tomar el control de tus proyectos hoy mismo</h3>
+      <a href="#" class="btn btn-success btn-lg mt-3 px-4">Empieza gratis</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-white text-center text-muted py-4 border-top">
+    <small>© 2025 Balancigastos. Todos los derechos reservados.</small>
+  </footer>
+</body>
+
+</html>

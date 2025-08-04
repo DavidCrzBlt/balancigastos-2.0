@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title|default:"Formulario" }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="card border-secondary col-md-6 offset-md-3 p-4 text-center">
+    <h4 class="h4 text-center text-dark">{{ form_title|default:"Formulario genérico" }}</h4>
+    <hr class="border border-secondary border-3 opacity-75">
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form }}
+      <button type="submit" class="btn btn-outline-secondary fw-semibold mt-3">{{ button_text|default:"Enviar" }}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

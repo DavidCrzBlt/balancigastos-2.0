@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.7",
+    "sass": "^1.89.2"
+  },
+  "scripts": {
+  "build-css": "sass --load-path=node_modules src/scss/main.scss dist/css/main.css",
+  "build-prod": "npm run build-css && copy dist\\css\\main.css ..\\static\\css\\main.css"  
+  }
+}

@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
+from django.urls import reverse_lazy
+
 from .models import Profile
 from .forms import ProfileForm, UserRegisterForm
+from core.views import FormularioGenericoView
 
 # Create your views here.
 
 def signup(request):
+    form = UserRegisterForm()
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -14,9 +18,14 @@ def signup(request):
             user.save()
             login(request, user)
             return redirect('usuarios:profile')
-    else:
-        form = UserRegisterForm()
-    return render(request, 'usuarios/signup.html', {'form': form})
+    context = {
+        'form': form,
+        'page_title': 'Registro de usuarios',
+        'form_title': 'Registrar nuevo usuario',
+        'button_text': 'Registrar usuario',
+    }
+    
+    return render(request, 'form_template.html', context)
 
 @login_required
 def profile(request):
