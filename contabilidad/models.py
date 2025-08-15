@@ -121,6 +121,9 @@ class CategoriaGasto(models.Model):
 class Gasto(models.Model):
     proyecto = models.ForeignKey(Proyectos, on_delete=models.CASCADE)
     categoria = models.ForeignKey(CategoriaGasto, on_delete=models.CASCADE)
+    concepto = models.CharField(max_length=255, null=True, blank=True)
+    proveedor = models.CharField(max_length=255, null=True, blank=True)
+    comprador = models.CharField(max_length=255, null=True, blank=True)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     fecha = models.DateField(default=timezone.now)
@@ -128,7 +131,7 @@ class Gasto(models.Model):
     lote = models.ForeignKey('Lote', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.proyecto.proyecto} - {self.categoria.nombre} - {self.monto}"
+        return f"{self.proyecto.proyecto} - {self.categoria.nombre} - {self.concepto} - {self.monto}"
 
 
 class Lote(models.Model):

@@ -29,21 +29,24 @@ def migrar_todo():
                     "Mano de Obra": CategoriaGasto.objects.get(nombre="Mano de Obra"),
                 }
             except CategoriaGasto.DoesNotExist:
-                print(f"❌ Categorías no encontradas en {tenant.schema_name}. Saltando tenant...")
+                print(f"Categorías no encontradas en {tenant.schema_name}. Saltando tenant...")
                 continue
 
             total_gastos = 0
             total_nominas = 0
 
-            # Migrar GastosVehiculos
+           # Migrar GastosVehiculos
             for g in GastosVehiculos.objects.all():
                 Gasto.objects.create(
                     proyecto=g.proyecto,
                     categoria=categorias["Vehículos"],
+                    concepto="Combustible u operación de vehículo",
+                    proveedor=g.proveedor,
+                    comprador=g.conductor,
                     monto=g.monto,
                     iva=g.iva,
                     fecha=g.fecha,
-                    descripcion=f"Proveedor: {g.proveedor} | Ubicación: {g.ubicacion} | Conductor: {g.conductor}"
+                    descripcion=f"Ubicación: {g.ubicacion}"
                 )
                 total_gastos += 1
 
@@ -52,10 +55,13 @@ def migrar_todo():
                 Gasto.objects.create(
                     proyecto=g.proyecto,
                     categoria=categorias["Generales"],
+                    concepto=g.concepto,
+                    proveedor=g.proveedor,
+                    comprador=g.comprador,
                     monto=g.monto,
                     iva=g.iva,
                     fecha=g.fecha,
-                    descripcion=f"Proveedor: {g.proveedor} | Comprador: {g.comprador} | Concepto: {g.concepto}"
+                    descripcion=g.notas
                 )
                 total_gastos += 1
 
@@ -64,10 +70,13 @@ def migrar_todo():
                 Gasto.objects.create(
                     proyecto=g.proyecto,
                     categoria=categorias["Materiales"],
+                    concepto=g.concepto,
+                    proveedor=g.proveedor,
+                    comprador=g.comprador,
                     monto=g.monto,
                     iva=g.iva,
                     fecha=g.fecha,
-                    descripcion=f"Proveedor: {g.proveedor} | Comprador: {g.comprador} | Concepto: {g.concepto}"
+                    descripcion=g.descripcion
                 )
                 total_gastos += 1
 
@@ -76,10 +85,13 @@ def migrar_todo():
                 Gasto.objects.create(
                     proyecto=g.proyecto,
                     categoria=categorias["Seguridad"],
+                    concepto=g.concepto,
+                    proveedor=g.proveedor,
+                    comprador=g.comprador,
                     monto=g.monto,
                     iva=g.iva,
                     fecha=g.fecha,
-                    descripcion=f"Proveedor: {g.proveedor} | Comprador: {g.comprador} | Concepto: {g.concepto}"
+                    descripcion=g.descripcion
                 )
                 total_gastos += 1
 
@@ -88,10 +100,13 @@ def migrar_todo():
                 Gasto.objects.create(
                     proyecto=g.proyecto,
                     categoria=categorias["Equipos"],
+                    concepto=g.concepto,
+                    proveedor=g.proveedor,
+                    comprador=g.comprador,
                     monto=g.monto,
                     iva=g.iva,
                     fecha=g.fecha,
-                    descripcion=f"Proveedor: {g.proveedor} | Comprador: {g.comprador} | Concepto: {g.concepto} | Tiempo renta: {g.tiempo_renta}"
+                    descripcion=f"Tipo de renta: {g.tiempo_renta} | Detalles: {g.descripcion}"
                 )
                 total_gastos += 1
 
@@ -132,6 +147,6 @@ def migrar_todo():
                 )
                 total_nominas += 1
 
-            print(f"✅ {total_gastos} gastos y {total_nominas} nóminas migrados en {tenant.schema_name}")
+            print(f"{total_gastos} gastos y {total_nominas} nóminas migrados en {tenant.schema_name}")
 
     print("\n=== Migración completada en todos los tenants ===")
