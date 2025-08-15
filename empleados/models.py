@@ -19,7 +19,7 @@ class Empleados(models.Model):
 
 class Asistencias(models.Model):
     empleado = models.ForeignKey(Empleados,related_name="asistencias",on_delete=models.CASCADE)
-    proyecto = models.ForeignKey(Proyectos,related_name="asistencias",on_delete=models.CASCADE)
+    proyecto = models.ForeignKey('proyectos.Proyectos',related_name="asistencias",on_delete=models.CASCADE)
     asistencias = models.BooleanField(default=True,null=False)
     horas_extras = models.DecimalField(max_digits=4, decimal_places=2,null=False,default=Decimal('0.00'))
     fecha = models.DateField(default=timezone.now,null=False)
@@ -29,7 +29,7 @@ class Asistencias(models.Model):
 
 class Salario(models.Model):
     empleado = models.ForeignKey(Empleados,related_name="salario",on_delete=models.CASCADE)
-    proyecto = models.ForeignKey(Proyectos,related_name="salario",on_delete=models.CASCADE)
+    proyecto = models.ForeignKey('proyectos.Proyectos',related_name="salario",on_delete=models.CASCADE)
     salario = models.DecimalField(max_digits=10, decimal_places=2,null=False,default=Decimal('0.00'))
     infonavit = models.DecimalField(max_digits=10, decimal_places=2,null=False,default=Decimal('0.00'))
     imss = models.DecimalField(max_digits=10, decimal_places=2,null=False,default=Decimal('0.00'))
@@ -39,7 +39,7 @@ class Salario(models.Model):
 
 class Lote(models.Model):
     creado_en = models.DateTimeField(auto_now_add=True)
-    proyecto = models.ForeignKey(Proyectos,related_name='lotes',on_delete=models.CASCADE)
+    proyecto = models.ForeignKey('proyectos.Proyectos',related_name='lotes',on_delete=models.CASCADE)
 
     @classmethod
     def obtener_nuevo_lote(cls,proyecto):

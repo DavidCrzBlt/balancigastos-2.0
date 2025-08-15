@@ -108,3 +108,61 @@ class Ingresos(models.Model):
 
     def __str__(self):
         return self.proyecto.proyecto
+    
+### Nuevos modelos que sustituirán a los anteriores
+    
+class CategoriaGasto(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nombre
+
+
+class Gasto(models.Model):
+    proyecto = models.ForeignKey(Proyectos, on_delete=models.CASCADE)
+    categoria = models.ForeignKey(CategoriaGasto, on_delete=models.CASCADE)
+    monto = models.DecimalField(max_digits=10, decimal_places=2)
+    iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    fecha = models.DateField(default=timezone.now)
+    descripcion = models.TextField(blank=True, null=True)
+    lote = models.ForeignKey('Lote', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.proyecto.proyecto} - {self.categoria.nombre} - {self.monto}"
+
+
+class Lote(models.Model):
+    proyecto = models.ForeignKey(Proyectos, on_delete=models.CASCADE)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    descripcion = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Lote {self.id} - {self.proyecto.proyecto}"
+
+
+class NominaEmpleado(models.Model):
+    empleado = models.ForeignKey('empleados.Empleados', on_delete=models.CASCADE)
+    proyecto = models.ForeignKey(Proyectos, on_delete=models.CASCADE)
+    lote = models.ForeignKey(Lote, on_delete=models.CASCADE)
+    fecha = models.DateField()
+
+    salario_base = models.DecimalField(max_digits=10, decimal_places=2)
+    imss = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    infonavit = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    isr = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    isn = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    horas_extras = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    @property
+    def total(self):
+        return (
+            self.salario_base +
+            self.imss +
+            self.infonavit +
+            self.isr +
+            self.isn +
+            self.horas_extras
+        )
+
+    def __str__(self):
+        return f"{self.empleado} - {self.proyecto.proyecto} - {self.total}"
