@@ -4,28 +4,12 @@
 {% block content %}
 <div class="container">
 
-    <h4 class="h4 text-center mt-3 text-dark">Gastos {{ proyecto.proyecto }}</h4>
-
-    {% if proyecto %}
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" href="{% url 'proyectos:detalles_proyecto' proyecto.slug %}">Detalles de proyecto</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" aria-current="page" href="{% url 'contabilidad:ingresos' proyecto.slug %}">Ingresos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold active" href="{% url 'contabilidad:gastos' proyecto.slug %}">Gastos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:nominas' proyecto.slug %}">Nóminas</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" href="{% url 'empleados:asistencias' proyecto.slug %}">Asistencias</a>
-        </li>
-    </ul>
+    {% block proyecto_nav_tabs %}
+    {% if mostrar_tabs %}
+    {% include 'partials/menu_proyecto_tabs.html' %}
     {% endif %}
-
+    {% endblock %}
+    
     <hr class="border border-secondary border-3 opacity-75">
 
     <div class="container text-center">

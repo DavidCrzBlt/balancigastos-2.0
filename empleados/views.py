@@ -139,7 +139,12 @@ class AsistenciasListView(LoginRequiredMixin,ListView):
         slug = self.kwargs.get('slug')
         proyecto = Proyectos.objects.get(slug=slug)
 
-        context['proyecto'] = proyecto
+        context.update({
+            'page_title': f'Lista de asistencias {proyecto}',
+            'proyecto': proyecto,
+            'active_tab': 'asistencias',
+            'mostrar_tabs': True,
+        })
         return context 
 
 class EmpleadosListView(LoginRequiredMixin,ListView):

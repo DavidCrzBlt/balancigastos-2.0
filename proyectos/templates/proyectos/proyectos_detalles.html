@@ -6,33 +6,12 @@
 <div class="container">
 
   {% if object %}
-  <h4 class="h4 text-center mt-3 text-dark">Detalles {{ object.proyecto }}</h4>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold active" aria-current="page"
-        href="{% url 'proyectos:detalles_proyecto' object.slug %}">
-        Detalles de proyecto
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:ingresos' object.slug %}">
-        Ingresos
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos' object.slug %}">Gastos</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:nominas' object.slug %}">Nóminas</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'empleados:asistencias' object.slug %}">
-        Asistencias
-      </a>
-    </li>
-
-  </ul>
+  {% block proyecto_nav_tabs %}
+  {% if mostrar_tabs %}
+  {% include 'partials/menu_proyecto_tabs.html' %}
+  {% endif %}
+  {% endblock %}
 
   <hr class="border border-secondary border-3 opacity-75">
 

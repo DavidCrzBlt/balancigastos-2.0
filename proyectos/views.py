@@ -96,8 +96,16 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
         # Llamar a la función recalcular_totales_proyecto que está en utils.py de contabilidad
         totales = recalcular_totales_proyecto(proyecto)
         # Añadir los valores recalculados al contexto
-        context.update(totales)
-        context['categorias'] = categorias
+        
+        
+        context.update({
+            'page_title': f'Detalles de proyecto {proyecto}',
+            'proyecto': proyecto,
+            'categorias': categorias,
+            'totales': totales,
+            'active_tab': 'detalles',
+            'mostrar_tabs': True,
+        })
         # ----------------------------------------------------------------------#
 
         # context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)

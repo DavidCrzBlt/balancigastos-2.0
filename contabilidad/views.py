@@ -49,8 +49,13 @@ class ListaGastosView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         slug = self.kwargs.get('slug')
         proyecto = Proyectos.objects.get(slug=slug)
-        context['page_title'] = 'Lista de gastos'
-        context['proyecto'] = proyecto
+
+        context.update({
+            'page_title': f'Lista de gastos {proyecto}',
+            'proyecto': proyecto,
+            'active_tab': 'gastos',
+            'mostrar_tabs': True,
+        })
         return context
 
 
@@ -77,8 +82,12 @@ class ListaNominasView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         slug = self.kwargs.get('slug')
         proyecto = Proyectos.objects.get(slug=slug)
-        context['proyecto'] = proyecto
-        context['page_title'] = 'Categorías de gasto'
+        context.update({
+            'page_title': f'Lista de nóminas {proyecto}',
+            'proyecto': proyecto,
+            'active_tab': 'nóminas',
+            'mostrar_tabs': True,
+        })
         return context
 
 
@@ -103,161 +112,14 @@ class IngresosListView(LoginRequiredMixin,ListView):
         total_iva = Ingresos.objects.filter(proyecto=proyecto).aggregate(total=Sum('iva'))['total'] or 0
 
         # Add the total to the context
-        context['total_monto'] = total_monto
-        context['total_iva'] = total_iva
-        context['proyecto'] = proyecto
-        return context 
-
-class GastosVehiculosListView(LoginRequiredMixin,ListView):
-    model = GastosVehiculos
-    template_name = "contabilidad/gastos_vehiculos_list.html"
-
-    def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        return GastosVehiculos.objects.filter(proyecto=proyecto)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
-        # Calculate total monto using aggregate
-        total_monto = GastosVehiculos.objects.filter(proyecto=proyecto).aggregate(total=Sum('monto'))['total'] or 0
-
-        # Calculate total iva using aggregate
-        total_iva = GastosVehiculos.objects.filter(proyecto=proyecto).aggregate(total=Sum('iva'))['total'] or 0
-
-        # Add the total to the context
-        context['total_monto'] = total_monto
-        context['total_iva'] = total_iva
-        context['proyecto'] = proyecto
-        return context
-
-class GastosGeneralesListView(LoginRequiredMixin,ListView):
-    model = GastosGenerales
-    template_name = "contabilidad/gastos_generales_list.html"
-
-    def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        return GastosGenerales.objects.filter(proyecto=proyecto)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
-        # Calculate total monto using aggregate
-        total_monto = GastosGenerales.objects.filter(proyecto=proyecto).aggregate(total=Sum('monto'))['total'] or 0
-
-        # Calculate total iva using aggregate
-        total_iva = GastosGenerales.objects.filter(proyecto=proyecto).aggregate(total=Sum('iva'))['total'] or 0
-
-        # Add the total to the context
-        context['total_monto'] = total_monto
-        context['total_iva'] = total_iva
-        context['proyecto'] = proyecto
-        return context 
-
-class GastosMaterialesListView(LoginRequiredMixin,ListView):
-    model = GastosMateriales
-    template_name = "contabilidad/gastos_materiales_list.html"
-
-    def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        return GastosMateriales.objects.filter(proyecto=proyecto)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
-        # Calculate total monto using aggregate
-        total_monto = GastosMateriales.objects.filter(proyecto=proyecto).aggregate(total=Sum('monto'))['total'] or 0
-
-        # Calculate total iva using aggregate
-        total_iva = GastosMateriales.objects.filter(proyecto=proyecto).aggregate(total=Sum('iva'))['total'] or 0
-        
-        # Add the total to the context
-        context['total_monto'] = total_monto
-        context['total_iva'] = total_iva
-        context['proyecto'] = proyecto
-        return context 
-
-class GastosManoObraListView(LoginRequiredMixin,ListView):
-    model = GastosManoObra
-    template_name = "contabilidad/gastos_mano_obra_list.html"
-
-    def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        return GastosManoObra.objects.filter(proyecto=proyecto)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
-        # Calculate total monto using aggregate
-        total_monto = GastosManoObra.objects.filter(proyecto=proyecto).aggregate(total=Sum('monto'))['total'] or 0
-
-        # Add the total to the context
-        context['total_monto'] = total_monto
-        context['proyecto'] = proyecto
-        return context 
-
-class GastosEquiposListView(LoginRequiredMixin,ListView):
-    model = GastosEquipos
-    template_name = "contabilidad/gastos_equipos_list.html"
-
-    def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        return GastosEquipos.objects.filter(proyecto=proyecto)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
-        # Calculate total monto using aggregate
-        total_monto = GastosEquipos.objects.filter(proyecto=proyecto).aggregate(total=Sum('monto'))['total'] or 0
-
-        # Calculate total iva using aggregate
-        total_iva = GastosEquipos.objects.filter(proyecto=proyecto).aggregate(total=Sum('iva'))['total'] or 0
-
-        # Add the total to the context
-        context['total_monto'] = total_monto
-        context['total_iva'] = total_iva
-        context['proyecto'] = proyecto
-        return context 
-    
-class GastosSeguridadListView(LoginRequiredMixin,ListView):
-    model = GastosEquipos
-    template_name = "contabilidad/gastos_seguridad_list.html"
-
-    def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        return GastosSeguridad.objects.filter(proyecto=proyecto)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
-        # Calculate total monto using aggregate
-        total_monto = GastosSeguridad.objects.filter(proyecto=proyecto).aggregate(total=Sum('monto'))['total'] or 0
-
-        # Calculate total iva using aggregate
-        total_iva = GastosSeguridad.objects.filter(proyecto=proyecto).aggregate(total=Sum('iva'))['total'] or 0
-
-        # Add the total to the context
-        context['total_monto'] = total_monto
-        context['total_iva'] = total_iva
-        context['proyecto'] = proyecto
+        context.update({
+            'page_title': f'Lista de ingresos {proyecto}',
+            'proyecto': proyecto,
+            'total_monto': total_monto,
+            'total_iva': total_iva,
+            'active_tab': 'ingresos',
+            'mostrar_tabs': True,
+        })
         return context 
     
 ### ------------------------------------------------------------------------- ###
@@ -440,36 +302,6 @@ def recalcular_totales_proyecto(proyecto_id):
 
 
 @login_required
-def registro_operaciones_generico(request, slug, form_class, redirect_url,op_category,active_tab):
-
-    # Obtén el proyecto usando el slug
-    proyecto = Proyectos.objects.get(slug=slug)
-
-    if not proyecto.estatus:
-        messages.error(request, "No se pueden registrar operaciones para un proyecto inactivo.")
-        return redirect(redirect_url,slug=slug)
-
-    if request.method == "POST":
-
-        if form_class.is_valid():
-            gasto = form_class.save(commit=False)
-            gasto.proyecto = proyecto
-            gasto.iva = gasto.monto * Decimal('0.16')
-            gasto.save()
-
-            # Actualizar el valor neto del proyecto (suma o resta según la categoría)
-            recalcular_totales_proyecto(proyecto.id)
-
-            # Redirige a la URL que se pasa como argumento
-            return redirect(redirect_url, slug=slug)
-
-    # Renderiza el template correspondiente
-    return render(request, 'contabilidad/registrar_operaciones.html', {'operaciones_form': form_class,
-     'proyecto': proyecto,
-     'categoria_operacion':op_category,
-     'active_tab':active_tab})
-
-@login_required
 def eliminar_operaciones_generico(request,slug,modelo,instancia_id,redirect_url):
     # Obtener el proyecto
     proyecto = get_object_or_404(Proyectos, slug=slug)
@@ -501,190 +333,6 @@ def eliminar_operaciones_generico(request,slug,modelo,instancia_id,redirect_url)
 # A partir de aquí se registran los gastos e ingresos
 ### ------------------------------------------------------------------------- ###
 ### ------------------------------------------------------------------------- ###
-@login_required
-def registro_gastos_vehiculos(request,slug,gasto_id=None):
-
-    if gasto_id:
-        # Si se pasa un gasto_id, es una edición, se obtiene el gasto
-        gasto = get_object_or_404(GastosVehiculos, id=gasto_id)
-        form_class = GastosVehiculosForm(request.POST or None, instance=gasto)  # Precargar datos
-    else:
-        # Si no hay gasto_id, es un registro nuevo
-        form_class = GastosVehiculosForm(request.POST or None)
-
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=form_class,    # Formulario de gastos de vehículos
-        redirect_url='contabilidad:gastos_vehiculos',  # URL a la que redirigir
-        op_category='gastos de vehículos',  # Categoría de operación
-        active_tab='vehiculos'
-    )
-
-@login_required
-def registro_gastos_generales(request,slug,gasto_id=None):
-
-    if gasto_id:
-        # Si se pasa un gasto_id, es una edición, se obtiene el gasto
-        gasto = get_object_or_404(GastosGenerales, id=gasto_id)
-        form_class = GastosGeneralesForm(request.POST or None, instance=gasto)  # Precargar datos
-    else:
-        # Si no hay gasto_id, es un registro nuevo
-        form_class = GastosGeneralesForm(request.POST or None)
-
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=form_class,    # Formulario de gastos generales
-        redirect_url='contabilidad:gastos_generales',  # URL a la que redirigir
-        op_category='gastos generales',  # Categoría de operación
-        active_tab='generales'
-    )
-
-@login_required
-def registro_gastos_materiales(request,slug,gasto_id=None):
-
-    if gasto_id:
-        # Si se pasa un gasto_id, es una edición, se obtiene el gasto
-        gasto = get_object_or_404(GastosMateriales, id=gasto_id)
-        form_class = GastosMaterialesForm(request.POST or None, instance=gasto)  # Precargar datos
-    else:
-        # Si no hay gasto_id, es un registro nuevo
-        form_class = GastosMaterialesForm(request.POST or None)
-
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=form_class,    # Formulario de gastos de materiales
-        redirect_url='contabilidad:gastos_materiales',  # URL a la que redirigir
-        op_category='gastos de materiales',  # Categoría de operación
-        active_tab='materiales'
-    )
-
-@login_required
-def registro_gastos_seguridad(request,slug,gasto_id=None):
-
-    if gasto_id:
-        # Si se pasa un gasto_id, es una edición, se obtiene el gasto
-        gasto = get_object_or_404(GastosSeguridad, id=gasto_id)
-        form_class = GastosSeguridadForm(request.POST or None, instance=gasto)  # Precargar datos
-    else:
-        # Si no hay gasto_id, es un registro nuevo
-        form_class = GastosSeguridadForm(request.POST or None)
-
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=form_class,    # Formulario de gastos de seguridad
-        redirect_url='contabilidad:gastos_seguridad',  # URL a la que redirigir
-        op_category='gastos de seguridad',  # Categoría de operación
-        active_tab='seguridad'
-    )
-
-@login_required
-def registro_gastos_equipos(request,slug,gasto_id=None):
-
-    if gasto_id:
-        # Si se pasa un gasto_id, es una edición, se obtiene el gasto
-        gasto = get_object_or_404(GastosEquipos, id=gasto_id)
-        form_class = GastosEquiposForm(request.POST or None, instance=gasto)  # Precargar datos
-    else:
-        # Si no hay gasto_id, es un registro nuevo
-        form_class = GastosEquiposForm(request.POST or None)
-
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=form_class,    # Formulario de gastos de equipos
-        redirect_url='contabilidad:gastos_equipos',  # URL a la que redirigir
-        op_category='gastos equipos',  # Categoría de operación
-        active_tab='equipos'
-    )
-
-@login_required
-def registro_gastos_mano_obra(request,slug):
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=GastosManoObraForm,    # Formulario de gastos de mano de obra
-        redirect_url='contabilidad:gastos_mano_obra',  # URL a la que redirigir
-        op_category='gastos mano de obra',  # Categoría de operación
-        active_tab='mano_obra'
-    )
-
-@login_required
-def registro_ingresos(request,slug,ingreso_id=None):
-
-    if ingreso_id:
-        # Si se pasa un ingreso_id, es una edición, se obtiene el gasto
-        gasto = get_object_or_404(Ingresos, id=ingreso_id)
-        form_class = IngresosForm(request.POST or None, instance=gasto)  # Precargar datos
-    else:
-        # Si no hay ingreso_id, es un registro nuevo
-        form_class = IngresosForm(request.POST or None)
-
-    return registro_operaciones_generico(
-        request=request,
-        slug=slug,
-        form_class=form_class,    # Formulario de ingresos
-        redirect_url='contabilidad:ingresos',  # URL a la que redirigir
-        op_category='ingresos',  # Categoría de operación
-        active_tab='ingresos'
-    )
-
-
-# class CrearIngresoView(LoginRequiredMixin, CreateView):
-#     model = Ingresos
-#     form_class = IngresosForm
-#     template_name = 'form_template.html'
-
-#     def dispatch(self, request, *args, **kwargs):
-#         self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def form_valid(self, form):
-#         form.instance.proyecto = self.proyecto
-#         return super().form_valid(form)
-
-#     def get_success_url(self):
-#         return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context.update({
-#             'form_title': 'Registrar ingreso',
-#             'button_text': 'Guardar ingreso',
-#             'page_title': 'Registro de ingresos',
-#         })
-#         return context
-
-
-# class CrearGastoView(LoginRequiredMixin, CreateView):
-#     model = Gasto
-#     form_class = GastoForm
-#     template_name = 'form_template.html'
-
-#     def dispatch(self, request, *args, **kwargs):
-#         self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def form_valid(self, form):
-#         form.instance.proyecto = self.proyecto
-#         return super().form_valid(form)
-
-#     def get_success_url(self):
-#         return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context.update({
-#             'form_title': 'Registrar gasto',
-#             'button_text': 'Guardar gasto',
-#             'page_title': 'Registro de gastos',
-#         })
-#         return context
-
-
 
 class CrearIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
     model = Ingresos
@@ -696,10 +344,14 @@ class CrearIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context.update({
-            'form_title': 'Registrar ingreso',
+            'form_title': f'Registrar ingreso {self.proyecto}',
             'button_text': 'Guardar ingreso',
-            'page_title': 'Registro de ingresos',
+            'page_title': f'Registro de ingresos {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'ingresos',
+            'mostrar_tabs': True,
         })
         return context
 
@@ -714,11 +366,16 @@ class CrearGastoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context.update({
-            'form_title': 'Registrar gasto',
+            'form_title': f'Registrar gasto {self.proyecto}',
             'button_text': 'Guardar gasto',
-            'page_title': 'Registro de gastos',
+            'page_title': f'Registro de gastos {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'gastos',
+            'mostrar_tabs': True,
         })
+
         return context
     
 class CrearNominaView(CreateView):
@@ -761,9 +418,12 @@ class CrearNominaView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'form_title': 'Registrar nómina',
+            'form_title': f'Registrar nómina {self.proyecto}',
             'button_text': 'Guardar nómina',
-            'page_title': 'Registro de nómina',
+            'page_title': f'Registro de nóminas {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'nóminas',
+            'mostrar_tabs': True,
         })
         return context
 

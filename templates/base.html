@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} My site {% endblock %}</title>
+    <title>{% block title %} {{ page_title|default:"BalanciGastos" }} {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -17,8 +17,10 @@
     {% else %}
     {% include 'navbar.html' %}
     {% endif %}
+    
 
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
     {% if messages %}
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11;">
         {% for message in messages %}
