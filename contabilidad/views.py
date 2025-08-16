@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import GastosVehiculosForm, GastosGeneralesForm, GastosMaterialesForm, GastosManoObraForm, GastosSeguridadForm, GastosEquiposForm, IngresosForm
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView
 from .models import GastosVehiculos, GastosGenerales, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad, Ingresos
 from proyectos.models import Proyectos
 from empleados.models import Salario
@@ -10,6 +11,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from decimal import Decimal
 from django.contrib import messages
+from .models import Gasto, CategoriaGasto
+from .forms import GastoForm, CategoriaGastoForm
+
+from django.urls import reverse
 
 import pandas as pd
 
@@ -25,6 +30,36 @@ import pandas as pd
 # Se muestran todas las vistas de los detalles del proyecto
 ### ------------------------------------------------------------------------- ###
 ### ------------------------------------------------------------------------- ###
+
+
+class ListaGastosView(LoginRequiredMixin, ListView):
+    model = Gasto
+    template_name = 'contabilidad/gastos.html'
+    context_object_name = 'gastos'
+
+    def get_queryset(self):
+        proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+        return Gasto.objects.filter(proyecto=proyecto).order_by('-fecha')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')
+        proyecto = Proyectos.objects.get(slug=slug)
+        context['page_title'] = 'Lista de gastos'
+        context['proyecto'] = proyecto
+        return context
+
+
+class ListaCategoriasGastoView(LoginRequiredMixin, ListView):
+    model = CategoriaGasto
+    template_name = 'contabilidad/lista_categorias.html'
+    context_object_name = 'categorias'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Categorías de gasto'
+        return context
+
 
 class IngresosListView(LoginRequiredMixin,ListView):
     model = Ingresos
@@ -575,6 +610,76 @@ def registro_ingresos(request,slug,ingreso_id=None):
         op_category='ingresos',  # Categoría de operación
         active_tab='ingresos'
     )
+
+
+class CrearIngresoView(LoginRequiredMixin, CreateView):
+    model = Ingresos
+    form_class = IngresosForm
+    template_name = 'form_template.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.proyecto = self.proyecto
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': 'Registrar ingreso',
+            'button_text': 'Guardar ingreso',
+            'page_title': 'Registro de ingresos',
+        })
+        return context
+
+
+class CrearGastoView(LoginRequiredMixin, CreateView):
+    model = Gasto
+    form_class = GastoForm
+    template_name = 'form_template.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.proyecto = self.proyecto
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': 'Registrar gasto',
+            'button_text': 'Guardar gasto',
+            'page_title': 'Registro de gastos',
+        })
+        return context
+
+class CrearCategoriaGastoView(LoginRequiredMixin, CreateView):
+    model = CategoriaGasto
+    form_class = CategoriaGastoForm
+    template_name = 'form_template.html'
+    
+    def get_success_url(self):
+        return reverse('contabilidad:categorias_gasto')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': 'Agregar categoría de gasto',
+            'button_text': 'Crear categoría',
+            'page_title': 'Nueva categoría',
+        })
+        return context
+
 
 ### ------------------------------------------------------------------------- ###
 ### ------------------------------------------------------------------------- ###

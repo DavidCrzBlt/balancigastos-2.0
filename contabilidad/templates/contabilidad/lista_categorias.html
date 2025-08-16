@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Gastos proyecto {% endblock %}
+{% load currency %}
+{% block content %}
+
+<a href="{% url 'contabilidad:registro_categoria_gastos' %}"
+               class="btn btn-outline-secondary btn-lg fw-semibold p-3">Registrar categorias gastos</a>
+
+<ul>
+    {% for categoria in categorias %}
+    <li>{{ categoria.nombre }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,10 +1,8 @@
 from django import forms
-from .models import GastosVehiculos, GastosGenerales, GastosEquipos, GastosSeguridad, GastosManoObra, GastosMateriales, Ingresos
-from django.utils import timezone
+from .models import GastosVehiculos, GastosGenerales, GastosEquipos, GastosSeguridad, GastosManoObra, GastosMateriales, Ingresos, Gasto, CategoriaGasto
+from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 
- # Obtén la hora actual en la zona horaria local
-now = timezone.now().date()
 
 class GastosVehiculosForm(forms.ModelForm):
     class Meta:
@@ -18,7 +16,7 @@ class GastosVehiculosForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha 
@@ -35,7 +33,7 @@ class GastosGeneralesForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha
@@ -52,7 +50,7 @@ class GastosMaterialesForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha 
@@ -69,7 +67,7 @@ class GastosManoObraForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha 
@@ -86,7 +84,7 @@ class GastosEquiposForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha
@@ -103,7 +101,7 @@ class GastosSeguridadForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha 
@@ -121,7 +119,30 @@ class IngresosForm(forms.ModelForm):
         fecha = self.cleaned_data.get('fecha')
 
         # Check if the date is in the future
-        if fecha > now:
+        if fecha > now().date():
+            raise ValidationError('No puedes registrar un ingreso con una fecha futura.')
+
+        return fecha
+    
+class GastoForm(forms.ModelForm):
+    class Meta:
+        model = Gasto
+        fields = ['categoria','concepto','proveedor','comprador','monto','descripcion','fecha']
+
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),  # Calendar widget for 'fecha'
+        }
+
+    def clean_fecha(self):
+        fecha = self.cleaned_data.get('fecha')
+
+        # Check if the date is in the future
+        if fecha > now().date():
             raise ValidationError('No puedes registrar un gasto con una fecha futura.')
 
         return fecha
+    
+class CategoriaGastoForm(forms.ModelForm):
+    class Meta:
+        model = CategoriaGasto
+        fields = ['nombre']

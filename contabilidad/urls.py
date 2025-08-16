@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
-from contabilidad.views import GastosVehiculosListView, GastosGeneralesListView, GastosMaterialesListView, GastosManoObraListView, GastosEquiposListView, IngresosListView, GastosSeguridadListView
+from contabilidad.views import GastosVehiculosListView, GastosGeneralesListView, GastosMaterialesListView, GastosManoObraListView, GastosEquiposListView, IngresosListView, GastosSeguridadListView, ListaGastosView, ListaCategoriasGastoView
+from contabilidad.views import CrearIngresoView,CrearGastoView, CrearCategoriaGastoView
 
 app_name = 'contabilidad'
 
@@ -13,6 +14,8 @@ urlpatterns = [
     path("<slug:slug>/gastos-seguridad",GastosSeguridadListView.as_view(),name="gastos_seguridad"),
     path("<slug:slug>/gastos-mano-obra",GastosManoObraListView.as_view(),name="gastos_mano_obra"),
     path("<slug:slug>/ingresos",IngresosListView.as_view(),name="ingresos"),
+    path("<slug:slug>/gastos",ListaGastosView.as_view(),name="gastos"),
+    path("categorias/",ListaCategoriasGastoView.as_view(),name="categorias_gasto"),
     
     # Path de registros
     path("registrar-gastos-generales/<slug:slug>",views.registro_gastos_generales, name="registro_gastos_generales"),
@@ -21,7 +24,9 @@ urlpatterns = [
     path("registrar-gastos-equipos/<slug:slug>",views.registro_gastos_equipos,name="registro_gastos_equipos"),
     path("registrar-gastos-seguridad/<slug:slug>",views.registro_gastos_seguridad,name="registro_gastos_seguridad"),
     path("registrar-gastos-mano-obra/<slug:slug>",views.registro_gastos_mano_obra,name="registro_gastos_mano_obra"),
-    path("registrar-ingreso/<slug:slug>",views.registro_ingresos,name="registro_ingresos"),
+    path("registrar-ingreso/<slug:slug>",CrearIngresoView.as_view(),name="registro_ingresos"),
+    path("registrar-gasto/<slug:slug>",CrearGastoView.as_view(),name="registro_gastos"),
+    path("registrar-categoria-gasto/",CrearCategoriaGastoView.as_view(),name="registro_categoria_gastos"),
 
     # Path de ediciones
     path("editar-gastos-generales/<slug:slug>/<int:gasto_id>",views.registro_gastos_generales, name="editar_gastos_generales"),
