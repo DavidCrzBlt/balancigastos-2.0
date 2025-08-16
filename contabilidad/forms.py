@@ -1,7 +1,9 @@
 from django import forms
-from .models import GastosVehiculos, GastosGenerales, GastosEquipos, GastosSeguridad, GastosManoObra, GastosMateriales, Ingresos, Gasto, CategoriaGasto
+from .models import GastosVehiculos, GastosGenerales, GastosEquipos, GastosSeguridad, GastosManoObra, GastosMateriales, Ingresos, Gasto, CategoriaGasto, NominaEmpleado
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
+
+from empleados.models import Empleados
 
 
 class GastosVehiculosForm(forms.ModelForm):
@@ -146,3 +148,11 @@ class CategoriaGastoForm(forms.ModelForm):
     class Meta:
         model = CategoriaGasto
         fields = ['nombre']
+
+class NominaEmpleadoForm(forms.ModelForm):
+    class Meta:
+        model = NominaEmpleado
+        exclude = ['lote', 'proyecto']
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'})
+        }

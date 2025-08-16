@@ -16,19 +16,15 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_mano_obra' object.slug %}">
-        Gastos mano de obra
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'contabilidad:gastos' object.slug %}">
-        Gastos
-      </a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:ingresos' object.slug %}">
         Ingresos
       </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos' object.slug %}">Gastos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:nominas' object.slug %}">Nóminas</a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-dark fw-semibold" href="{% url 'empleados:asistencias' object.slug %}">

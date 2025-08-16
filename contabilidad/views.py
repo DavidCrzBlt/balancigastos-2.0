@@ -12,12 +12,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from decimal import Decimal
 from django.contrib import messages
 from .models import Gasto, CategoriaGasto
-from .forms import GastoForm, CategoriaGastoForm
-# from contabilidad.utils import calcular_iva, recalcular_totales_proyecto
+from .forms import GastoForm, CategoriaGastoForm, NominaEmpleadoForm
+from contabilidad.utils import calcular_iva, recalcular_totales_proyecto
 from contabilidad.mixins import ProyectoOperacionMixin
 from django.urls import reverse
 
 import pandas as pd
+
+
+from .models import NominaEmpleado, Lote, Gasto, CategoriaGasto
 
 # Create your views here.
 
@@ -58,6 +61,23 @@ class ListaCategoriasGastoView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Categorías de gasto'
+        return context
+    
+class ListaNominasView(LoginRequiredMixin, ListView):
+    model = NominaEmpleado
+    template_name = 'contabilidad/nominas_list.html'
+    context_object_name = 'nominas'
+
+    def get_queryset(self):
+        proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+        return NominaEmpleado.objects.filter(proyecto=proyecto).order_by('-fecha')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')
+        proyecto = Proyectos.objects.get(slug=slug)
+        context['proyecto'] = proyecto
         context['page_title'] = 'Categorías de gasto'
         return context
 
@@ -700,6 +720,53 @@ class CrearGastoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
             'page_title': 'Registro de gastos',
         })
         return context
+    
+class CrearNominaView(CreateView):
+    model = NominaEmpleado
+    form_class = NominaEmpleadoForm
+    template_name = 'form_template.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.proyecto = get_object_or_404(Proyectos, slug=self.kwargs['slug'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # Crear un lote automáticamente
+        lote = Lote.objects.create(proyecto=self.proyecto)
+
+        nomina = form.save(commit=False)
+        nomina.lote = lote
+        nomina.proyecto = self.proyecto
+        nomina.save()
+
+        # Crear gasto asociado
+        categoria = CategoriaGasto.objects.get(nombre="Mano de Obra")
+        Gasto.objects.create(
+            proyecto=self.proyecto,
+            categoria=categoria,
+            concepto = f"Mano de Obra/Lote: {lote}",
+            monto=nomina.total,
+            iva=Decimal('0.00'),
+            fecha=nomina.fecha,
+            descripcion=f"Nómina para {nomina.empleado} en lote {lote.id}",
+            lote=lote
+        )
+
+        # Recalcular totales del proyecto
+        recalcular_totales_proyecto(self.proyecto.id)
+
+        messages.success(self.request, "Nómina registrada exitosamente.")
+        return redirect('contabilidad:nominas', slug=self.proyecto.slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': 'Registrar nómina',
+            'button_text': 'Guardar nómina',
+            'page_title': 'Registro de nómina',
+        })
+        return context
+
 
 class CrearCategoriaGastoView(LoginRequiredMixin, CreateView):
     model = CategoriaGasto

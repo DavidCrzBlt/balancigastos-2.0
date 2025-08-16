@@ -47,7 +47,7 @@
                 <td>{{ gasto.isr|pesos }}</td>
                 <td>{{ gasto.horas_extras|pesos }}</td>
                 <td>{{ gasto.monto|pesos }}</td>
-                <td><a href="{% url 'empleados:nominas' proyecto.slug gasto.lote %}">{{ gasto.lote }}</a></td>
+                <td><a href="{% url 'contabilidad:nominas' proyecto.slug gasto.lote %}">{{ gasto.lote }}</a></td>
                 <td>{{ gasto.fecha|date:"d-M-y" }}</td>
                 <td><a href="{% url 'contabilidad:eliminar_gastos_mano_obra' proyecto.slug gasto.id %}" class="btn btn-outline-danger"  onclick="return confirm('¿Estás seguro de que quieres eliminar este gasto?');">Eliminar</a></td>
             </tr>
