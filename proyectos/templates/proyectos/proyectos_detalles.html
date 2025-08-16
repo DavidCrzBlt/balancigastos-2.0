@@ -124,6 +124,22 @@
 
 
   <hr class="border border-secondary border-3 opacity-75 mt-5">
+  <div class="row justify-content-evenly">
+    <ul class="list-group col-4">
+      <li class="list-group-item text-center"><strong>Gastos</strong></li>
+      <hr class="border border-secondary border-3 opacity-75">
+      <li class="list-group-item list-group-item-primary"><strong>Gastos totales:</strong> {{ total_gastos|pesos }}</li>
+      {% for nombre_categoria,datos in categorias.items %}
+      <li class="list-group-item">
+        <strong>Gastos {{ nombre_categoria }}:</strong> {{ datos.monto|pesos }} <br>
+        <small class="text-muted">IVA: {{ datos.iva|pesos }}</small>
+      </li>
+      {% endfor %}
+      <li class="list-group-item"><strong>Total I.V.A. gastos:</strong> {{ total_iva_gastos|pesos }}</li>
+    </ul>
+  </div>
+
+  <br>
 </div>
 
 <!-- <h4 class="h4 text-center mt-3 mb-3 text-dark">Tablero de {{ object.proyecto }}</h4>

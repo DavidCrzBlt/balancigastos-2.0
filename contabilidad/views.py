@@ -13,7 +13,8 @@ from decimal import Decimal
 from django.contrib import messages
 from .models import Gasto, CategoriaGasto
 from .forms import GastoForm, CategoriaGastoForm
-
+# from contabilidad.utils import calcular_iva, recalcular_totales_proyecto
+from contabilidad.mixins import ProyectoOperacionMixin
 from django.urls import reverse
 
 import pandas as pd
@@ -612,18 +613,63 @@ def registro_ingresos(request,slug,ingreso_id=None):
     )
 
 
-class CrearIngresoView(LoginRequiredMixin, CreateView):
+# class CrearIngresoView(LoginRequiredMixin, CreateView):
+#     model = Ingresos
+#     form_class = IngresosForm
+#     template_name = 'form_template.html'
+
+#     def dispatch(self, request, *args, **kwargs):
+#         self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+#         return super().dispatch(request, *args, **kwargs)
+
+#     def form_valid(self, form):
+#         form.instance.proyecto = self.proyecto
+#         return super().form_valid(form)
+
+#     def get_success_url(self):
+#         return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context.update({
+#             'form_title': 'Registrar ingreso',
+#             'button_text': 'Guardar ingreso',
+#             'page_title': 'Registro de ingresos',
+#         })
+#         return context
+
+
+# class CrearGastoView(LoginRequiredMixin, CreateView):
+#     model = Gasto
+#     form_class = GastoForm
+#     template_name = 'form_template.html'
+
+#     def dispatch(self, request, *args, **kwargs):
+#         self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+#         return super().dispatch(request, *args, **kwargs)
+
+#     def form_valid(self, form):
+#         form.instance.proyecto = self.proyecto
+#         return super().form_valid(form)
+
+#     def get_success_url(self):
+#         return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context.update({
+#             'form_title': 'Registrar gasto',
+#             'button_text': 'Guardar gasto',
+#             'page_title': 'Registro de gastos',
+#         })
+#         return context
+
+
+
+class CrearIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
     model = Ingresos
     form_class = IngresosForm
     template_name = 'form_template.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
-        return super().dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.instance.proyecto = self.proyecto
-        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
@@ -638,18 +684,10 @@ class CrearIngresoView(LoginRequiredMixin, CreateView):
         return context
 
 
-class CrearGastoView(LoginRequiredMixin, CreateView):
+class CrearGastoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
     model = Gasto
     form_class = GastoForm
     template_name = 'form_template.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
-        return super().dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.instance.proyecto = self.proyecto
-        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})

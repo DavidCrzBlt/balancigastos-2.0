@@ -14,12 +14,15 @@ from .models import Proyectos
 from core.views import FormularioGenericoView
 from contabilidad.models import Ingresos, GastosGenerales, GastosVehiculos, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad
 from empleados.models import Salario, Asistencias
-from contabilidad.views import recalcular_totales_proyecto
+# from contabilidad.views import recalcular_totales_proyecto
 from .graficas import grafica_ingresos_vs_gastos_semanales, grafica_ingresos_vs_gastos, grafica_gastos_categoria
 
 from decimal import Decimal
 from openpyxl import Workbook
 import io
+
+from contabilidad.utils import calcular_iva, recalcular_totales_proyecto, obtener_totales_por_categoria
+from contabilidad.models import CategoriaGasto
 
 # Create your views here.
 
@@ -88,11 +91,13 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
         context = super().get_context_data(**kwargs)
         proyecto = self.get_object()
 
+        categorias = obtener_totales_por_categoria(proyecto)
         # ----------------------------------------------------------------------#
-        # Llamar a la función recalcular_totales_proyecto que está en views.py de contabilidad
-        totales = recalcular_totales_proyecto(proyecto.id)
+        # Llamar a la función recalcular_totales_proyecto que está en utils.py de contabilidad
+        totales = recalcular_totales_proyecto(proyecto)
         # Añadir los valores recalculados al contexto
         context.update(totales)
+        context['categorias'] = categorias
         # ----------------------------------------------------------------------#
 
         # context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)
