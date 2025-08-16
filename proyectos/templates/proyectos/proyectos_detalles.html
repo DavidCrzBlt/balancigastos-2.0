@@ -11,42 +11,31 @@
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a class="nav-link text-dark fw-semibold active" aria-current="page"
-        href="{% url 'proyectos:detalles_proyecto' object.slug %}">Detalles
-        de proyecto</a>
+        href="{% url 'proyectos:detalles_proyecto' object.slug %}">
+        Detalles de proyecto
+      </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_vehiculos' object.slug %}">Gastos
-        vehículos</a>
+      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_mano_obra' object.slug %}">
+        Gastos mano de obra
+      </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_generales' object.slug %}">Gastos
-        generales</a>
+      <a class="nav-link" href="{% url 'contabilidad:gastos' object.slug %}">
+        Gastos
+      </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_materiales' object.slug %}">Gastos
-        materiales</a>
+      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:ingresos' object.slug %}">
+        Ingresos
+      </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_mano_obra' object.slug %}">Gastos mano
-        de obra</a>
+      <a class="nav-link text-dark fw-semibold" href="{% url 'empleados:asistencias' object.slug %}">
+        Asistencias
+      </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_seguridad' object.slug %}">Gastos
-        seguridad</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:gastos_equipos' object.slug %}">Gastos
-        equipos</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'contabilidad:ingresos' object.slug %}">Ingresos</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-dark fw-semibold" href="{% url 'empleados:asistencias' object.slug %}">Asistencias</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'contabilidad:gastos' object.slug %}">Gastos</a>
-    </li>
+
   </ul>
 
   <hr class="border border-secondary border-3 opacity-75">
@@ -75,7 +64,7 @@
 
   <div class="row justify-content-evenly">
     <ul class="list-group col-4">
-      <li class="list-group-item text-center"><strong>Ingresos</strong></li>
+      <li class="list-group-item list-group-item-primary text-center"><strong>Ingresos</strong></li>
       <hr class="border border-secondary border-3 opacity-75">
       <li class="list-group-item list-group-item-primary"><strong>Ingresos Totales:</strong> {{ total_ingresos|pesos }}
       </li>
@@ -92,20 +81,21 @@
     </ul>
 
     <ul class="list-group col-4">
-      <li class="list-group-item text-center"><strong>Egresos</strong></li>
+      <li class="list-group-item list-group-item-primary text-center"><strong>Gastos</strong></li>
       <hr class="border border-secondary border-3 opacity-75">
-      <li class="list-group-item list-group-item-primary"><strong>Gastos totales:</strong> {{ total_gastos|pesos }}</li>
-      <li class="list-group-item"><strong>Gastos vehículos:</strong> {{ gastos_vehiculos|pesos }} </li>
-      <li class="list-group-item"><strong>Gastos generales:</strong> {{ gastos_generales|pesos }} </li>
-      <li class="list-group-item"><strong>Gastos materiales:</strong> {{ gastos_materiales|pesos }} </li>
-      <li class="list-group-item"><strong>Gastos mano de obra:</strong> {{ gastos_mano_obra|pesos }}</li>
-      <li class="list-group-item"><strong>Gastos seguridad:</strong> {{ gastos_seguridad|pesos }} </li>
-      <li class="list-group-item"><strong>Gastos equipos:</strong> {{ gastos_equipos|pesos }} </li>
+      <li class="list-group-item list-group-item-primary"><strong>Gastos totales:</strong> {{ total_gastos|pesos }}
+      </li>
+      {% for nombre_categoria,datos in categorias.items %}
+      <li class="list-group-item">
+        <strong>Gastos {{ nombre_categoria }}:</strong> {{ datos.monto|pesos }} <br>
+        <small class="text-muted">IVA: {{ datos.iva|pesos }}</small>
+      </li>
+      {% endfor %}
       <li class="list-group-item"><strong>Total I.V.A. gastos:</strong> {{ total_iva_gastos|pesos }}</li>
     </ul>
 
     <ul class="list-group col-4">
-      <li class="list-group-item text-center"><strong>Resultados</strong></li>
+      <li class="list-group-item list-group-item-primary text-center"><strong>Resultados</strong></li>
       <hr class="border border-secondary border-3 opacity-75">
       <li class="list-group-item"><strong>Empresa:</strong> {{ object.empresa }}</li>
       <li class="list-group-item"><strong>Estatus:</strong>{% if object.estatus == True %} Activo {% else %} Inactivo
@@ -122,24 +112,8 @@
 
   </div>
 
-
   <hr class="border border-secondary border-3 opacity-75 mt-5">
-  <div class="row justify-content-evenly">
-    <ul class="list-group col-4">
-      <li class="list-group-item text-center"><strong>Gastos</strong></li>
-      <hr class="border border-secondary border-3 opacity-75">
-      <li class="list-group-item list-group-item-primary"><strong>Gastos totales:</strong> {{ total_gastos|pesos }}</li>
-      {% for nombre_categoria,datos in categorias.items %}
-      <li class="list-group-item">
-        <strong>Gastos {{ nombre_categoria }}:</strong> {{ datos.monto|pesos }} <br>
-        <small class="text-muted">IVA: {{ datos.iva|pesos }}</small>
-      </li>
-      {% endfor %}
-      <li class="list-group-item"><strong>Total I.V.A. gastos:</strong> {{ total_iva_gastos|pesos }}</li>
-    </ul>
-  </div>
 
-  <br>
 </div>
 
 <!-- <h4 class="h4 text-center mt-3 mb-3 text-dark">Tablero de {{ object.proyecto }}</h4>

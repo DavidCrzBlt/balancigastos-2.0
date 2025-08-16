@@ -10,9 +10,6 @@
 
    <h4 class="h4 text-center mt-3">Lista de proyectos</h4>
 
-   <a href="{% url 'contabilidad:categorias_gasto' %}"
-               class="btn btn-outline-secondary btn-lg fw-semibold p-3">categorias gasto</a>
-
    <nav class="navbar bg-body-tertiary">
       <div class="container-fluid">
          <form method="GET" class="d-flex">
@@ -63,6 +60,10 @@
                class="btn btn-outline-secondary btn-lg fw-semibold p-3">Registrar nuevo proyecto</a>
          </div>
          <div class="col">
+            <a href="{% url 'contabilidad:categorias_gasto' %}"
+               class="btn btn-outline-secondary btn-lg fw-semibold p-3">Registrar nueva categoría de gastos</a>
+         </div>
+         <div class="col">
             <a href="{% url 'proyectos:export_proyectos_to_excel' %}"
                class="btn btn-outline-secondary btn-lg fw-semibold p-3">Descargar Excel de proyectos</a>
          </div>
@@ -90,7 +91,8 @@
             <tr>
                <th scope="row">{{ forloop.counter }}</th>
                <td>{{ project.id }}</td>
-               <td><a class="text-dark" href="{% url 'proyectos:detalles_proyecto' project.slug %}">{{ project.proyecto }}</a></td>
+               <td><a class="text-dark"
+                     href="{% url 'proyectos:detalles_proyecto' project.slug %}">{{ project.proyecto }}</a></td>
                <td>{{ project.clave_proyecto }}</td>
                <td>{{ project.empresa }}</td>
                {% if project.estatus == True %}

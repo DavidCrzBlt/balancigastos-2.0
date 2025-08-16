@@ -12,24 +12,6 @@
             <a class="nav-link" href="{% url 'proyectos:detalles_proyecto' proyecto.slug %}">Detalles de proyecto</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'contabilidad:gastos_vehiculos' proyecto.slug %}">Gastos vehículos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'contabilidad:gastos_generales' proyecto.slug %}">Gastos generales</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'contabilidad:gastos_materiales' proyecto.slug %}">Gastos materiales</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'contabilidad:gastos_mano_obra' proyecto.slug %}">Gastos mano de obra</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'contabilidad:gastos_seguridad' proyecto.slug %}">Gastos seguridad</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'contabilidad:gastos_equipos' proyecto.slug %}">Gastos equipos</a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link active" aria-current="page"
                 href="{% url 'contabilidad:ingresos' proyecto.slug %}">Ingresos</a>
         </li>
@@ -39,9 +21,9 @@
     </ul>
     {% endif %}
 
-    <div class="text-center col-md-4 offset-md-4 pt-5">
+    <div class="text-center col-md-4 offset-md-4 pt-3">
         <a href="{% url 'contabilidad:registro_ingresos' proyecto.slug %}"
-            class="btn btn-outline-secondary btn-lg mb-3">Registrar ingreso</a>
+            class="btn btn-outline-secondary btn-lg">Registrar ingreso</a>
     </div>
 
     <hr class="border border-secondary border-3 opacity-75">
