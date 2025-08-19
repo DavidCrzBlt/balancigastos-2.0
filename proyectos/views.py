@@ -14,14 +14,12 @@ from .models import Proyectos
 from core.views import FormularioGenericoView
 from contabilidad.models import Ingresos, GastosGenerales, GastosVehiculos, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad
 from empleados.models import Salario, Asistencias
-# from contabilidad.views import recalcular_totales_proyecto
-from .graficas import grafica_ingresos_vs_gastos_semanales, grafica_ingresos_vs_gastos, grafica_gastos_categoria
 
 from decimal import Decimal
 from openpyxl import Workbook
 import io
 
-from contabilidad.utils import calcular_iva, recalcular_totales_proyecto, obtener_totales_por_categoria
+from contabilidad.utils import recalcular_totales_proyecto, obtener_totales_por_categoria
 from contabilidad.models import CategoriaGasto
 
 # Create your views here.
@@ -90,13 +88,9 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         proyecto = self.get_object()
-
+        # Llamar a la función obtener_totales_por_categoria y recalcular_totales_proyecto que está en utils.py de contabilidad
         categorias = obtener_totales_por_categoria(proyecto)
-        # ----------------------------------------------------------------------#
-        # Llamar a la función recalcular_totales_proyecto que está en utils.py de contabilidad
         totales = recalcular_totales_proyecto(proyecto)
-        # Añadir los valores recalculados al contexto
-        
         
         context.update({
             'page_title': f'Detalles de proyecto {proyecto}',
@@ -106,35 +100,7 @@ class ProyectosDetailView(LoginRequiredMixin,DetailView):
             'active_tab': 'detalles',
             'mostrar_tabs': True,
         })
-        # ----------------------------------------------------------------------#
-
-        # context['graph_json'] = grafica_ingresos_vs_gastos_semanales(proyecto.id)
-        # context['graph_json2'] = grafica_ingresos_vs_gastos(proyecto.id)
-        # context['graph_json3'] = grafica_gastos_categoria(proyecto.id)
-
         return context
-
-# @login_required
-# def registrar_proyecto(request, slug=None):
-#     if slug:
-#         # Si existe un slug, es un proyecto que se va a editar
-#         proyecto = get_object_or_404(Proyectos, slug=slug)
-#         registrar_proyectos_form = ProyectosForm(request.POST or None, instance=proyecto)
-#     else:
-#         # Si no existe slug, es un proyecto nuevo
-#         registrar_proyectos_form = ProyectosForm(request.POST or None)
-    
-#     if request.method == "POST":
-#         if registrar_proyectos_form.is_valid():
-#             # Guardar el proyecto (nuevo o editado)
-#             proyecto = registrar_proyectos_form.save()
-#             # Redirigir a los detalles del proyecto después de guardar
-#             return redirect('proyectos:detalles_proyecto', slug=proyecto.slug)
-    
-#     # Si el formulario no es válido o es un GET, mostrar el formulario
-#     return render(request, "proyectos/registrar_proyecto.html", {'proyectos_form': registrar_proyectos_form})
-
-
 
 class CrearProyectoView(LoginRequiredMixin, FormularioGenericoView):
     form_class = ProyectosForm
@@ -161,7 +127,6 @@ class EditarProyectoView(LoginRequiredMixin, UpdateView):
         context['form_title'] = 'Modificar proyecto'
         context['button_text'] = 'Actualizar proyecto'
         return context
-
 
 
 def eliminar_proyecto(request, slug):

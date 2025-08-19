@@ -1,15 +1,15 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.sites.models import Site
-from clientes.models import Cliente, DominioCliente
-from clientes.forms import ClienteForm
-
 from django.utils.text import slugify
-from django.http import HttpResponseRedirect, HttpRequest
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.urls import reverse
 
 from core.views import FormularioGenericoView
-from django.conf import settings
-from django.urls import reverse
+
+from clientes.models import Cliente, DominioCliente
+from clientes.forms import ClienteForm
+from clientes. utils import get_subdomain
 
 import os
 
@@ -21,12 +21,7 @@ import os
 ###--------------------------------------------------------------------------------###
 
 dominio_principal = os.getenv('MAIN_DOMAIN')
-environment_mode = os.getenv('ENVIRONMENT')
-
-def get_subdomain(request: HttpRequest):
-    # Obtener el hostname completo (subdominio.dominio.com)
-    subdomain = request.get_host()
-    return subdomain
+environment_mode = os.getenv('ENVIRONMENT')  
 
 def pagina_principal(request):
     # Dependiendo del dominio va a redireccionar a la página de usuarios o de clientes
@@ -37,7 +32,6 @@ def pagina_principal(request):
         return redirect('clientes:crear_cliente')
     else:
         return redirect('usuarios:login')
-    
 
 class CrearClienteView(FormularioGenericoView):
     form_class = ClienteForm
