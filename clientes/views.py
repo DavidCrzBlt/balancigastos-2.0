@@ -3,7 +3,8 @@ from django.contrib.sites.models import Site
 from django.utils.text import slugify
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, UpdateView, DeleteView
 
 from core.views import FormularioGenericoView
 
@@ -15,9 +16,6 @@ import os
 
 
 # Create your views here.
-
-###--------------------------------------------------------------------------------###
-###--------------------------------------------------------------------------------###
 ###--------------------------------------------------------------------------------###
 
 dominio_principal = os.getenv('MAIN_DOMAIN')
@@ -90,3 +88,40 @@ class CrearClienteView(FormularioGenericoView):
 
         messages.success(self.request, f'Cliente {cliente.nombre} creado exitosamente.')
         return HttpResponseRedirect(redirect_url)
+    
+##---------------------- Las siguientes clases aún no están operativas------------##
+
+class ClienteListView(ListView):
+    model = Cliente
+    template_name = 'clientes/lista_clientes.html'  # Esta plantilla aún no existe
+    context_object_name = 'clientes'
+
+class ClienteUpdateView(UpdateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'form_template.html'
+    success_url = reverse_lazy('clientes:lista_clientes')  #Esta ruta aún no existe
+
+    page_title = 'Editar cliente'
+    form_title = 'Editar información del cliente'
+    button_text = 'Guardar cambios'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'page_title': self.page_title,
+            'form_title': self.form_title,
+            'button_text': self.button_text,
+        })
+        return context
+
+# Esta clase elimina el esquema entero del tenant por lo que es importante poner una advertencia y seguros antes de activarla.
+class ClienteDeleteView(DeleteView):
+    model = Cliente
+    template_name = 'clientes/confirmar_eliminacion.html' # Esta plantilla aún no existe
+    success_url = reverse_lazy('clientes:lista_clientes') # Esta ruta aún no existe
+
+    def delete(self, request, *args, **kwargs):
+        cliente = self.get_object()
+        messages.success(request, f'Cliente {cliente.nombre} eliminado correctamente.')
+        return super().delete(request, *args, **kwargs)

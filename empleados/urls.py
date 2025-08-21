@@ -1,17 +1,18 @@
 from django.urls import path
-from . import views
-from .views import EmpleadosListView, AsistenciasListView, NominasListView, RegistroEmpleadoView
+from empleados import views
 
 app_name = 'empleados'
 
 urlpatterns = [
-    path("empleados/",EmpleadosListView.as_view(),name="empleados"),
-    path("registro-empleado/",RegistroEmpleadoView.as_view(),name="registro_empleados"),
-    path("asistencias/<slug:slug>",AsistenciasListView.as_view(),name="asistencias"),
-    path("registro_asistencias/<slug:slug>",views.registro_asistencias,name="registro_asistencias"),
-    path("registro_nominas/<slug:slug>",views.registro_nominas,name="registro_nominas"),
-    path("nominas/<slug:slug>/<int:lote>",NominasListView.as_view(),name="nominas"),
-    path("eliminar-empleado/<int:empleado_id>",views.eliminar_empleado,name="eliminar_empleado"),
-    path("editar-empleado/<int:empleado_id>",views.editar_empleado,name="editar_empleado"),
-    path("eliminar-asistencia/<slug:slug>/<int:asistencia_id>",views.eliminar_asistencia,name="eliminar_asistencia"),
+    # Empleados
+    path('lista-empleados/', views.EmpleadosListView.as_view(), name='empleados'),
+    path('crear-empleado/', views.CrearEmpleadoView.as_view(), name='crear_empleado'),
+    path('editar-empleado/<int:pk>/', views.EditarEmpleadoView.as_view(), name='editar_empleado'),
+    path('eliminar-empleado/<int:pk>/', views.EliminarEmpleadoView.as_view(), name='eliminar_empleado'),
+
+    # Asistencias
+    path('<slug:slug>/asistencias/', views.AsistenciasListView.as_view(), name='asistencias'),
+    path('<slug:slug>/asistencias/crear/', views.CrearAsistenciaView.as_view(), name='crear_asistencia'),
+    path('asistencias/editar/<int:pk>/', views.EditarAsistenciaView.as_view(), name='editar_asistencia'),
+    path('asistencias/eliminar/<int:pk>/', views.EliminarAsistenciaView.as_view(), name='eliminar_asistencia'),
 ]

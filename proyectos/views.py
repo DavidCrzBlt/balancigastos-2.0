@@ -3,7 +3,7 @@ from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse, JsonResponse
@@ -128,12 +128,14 @@ class EditarProyectoView(LoginRequiredMixin, UpdateView):
         context['button_text'] = 'Actualizar proyecto'
         return context
 
+class EliminarProyectoView(LoginRequiredMixin, DeleteView):
+    model = Proyectos
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
 
-def eliminar_proyecto(request, slug):
-    # Obtener el proyecto a través del slug
-    proyecto = get_object_or_404(Proyectos, slug=slug)
-    proyecto.delete()
-    return redirect('proyectos:proyectos')
+    def get_success_url(self):
+        return reverse_lazy('proyectos:proyectos')
+
 
 @login_required
 def toggle_estatus_proyecto(request, slug):

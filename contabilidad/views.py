@@ -1,95 +1,41 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .forms import GastosVehiculosForm, GastosGeneralesForm, GastosMaterialesForm, GastosManoObraForm, GastosSeguridadForm, GastosEquiposForm, IngresosForm
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
-from .models import GastosVehiculos, GastosGenerales, GastosMateriales, GastosManoObra, GastosEquipos, GastosSeguridad, Ingresos
-from proyectos.models import Proyectos
-from empleados.models import Salario
-from django.db.models import Sum, F
-from django.db.models.functions import Coalesce, ExtractWeek, ExtractYear
-from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.db.models import Sum, ProtectedError
 from django.contrib.auth.mixins import LoginRequiredMixin
-from decimal import Decimal
 from django.contrib import messages
-from .models import Gasto, CategoriaGasto
-from .forms import GastoForm, CategoriaGastoForm, NominaEmpleadoForm
-from contabilidad.utils import calcular_iva, recalcular_totales_proyecto
-from contabilidad.mixins import ProyectoOperacionMixin
 from django.urls import reverse
 
-import pandas as pd
+from decimal import Decimal
 
+from .models import Ingresos, Gasto, CategoriaGasto, NominaEmpleado, Lote
+from .forms import GastoForm, CategoriaGastoForm, NominaEmpleadoForm, IngresosForm
+from .utils import recalcular_totales_proyecto
+from .mixins import ProyectoOperacionMixin
 
-from .models import NominaEmpleado, Lote, Gasto, CategoriaGasto
+from proyectos.models import Proyectos
 
 # Create your views here.
 
-### Vistas de detalle de proyecto ------------------------------------------- ###
-### Funciones genéricas para registro, edición y eliminación de instancias--- ###
-### Funciones de registro y edición de instancias por tipo de gasto o ingreso ###
-### Funciones de eliminación de instancias ---------------------------------- ###
+class CrearIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
+    model = Ingresos
+    form_class = IngresosForm
+    template_name = 'form_template.html'
 
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
-# Se muestran todas las vistas de los detalles del proyecto
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
-
-
-class ListaGastosView(LoginRequiredMixin, ListView):
-    model = Gasto
-    template_name = 'contabilidad/gastos.html'
-    context_object_name = 'gastos'
-
-    def get_queryset(self):
-        proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
-        return Gasto.objects.filter(proyecto=proyecto).order_by('-fecha')
+    def get_success_url(self):
+        return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-
         context.update({
-            'page_title': f'Lista de gastos {proyecto}',
-            'proyecto': proyecto,
-            'active_tab': 'gastos',
+            'form_title': f'Registrar ingreso {self.proyecto}',
+            'button_text': 'Guardar ingreso',
+            'page_title': f'Registro de ingresos {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'ingresos',
             'mostrar_tabs': True,
         })
         return context
-
-
-class ListaCategoriasGastoView(LoginRequiredMixin, ListView):
-    model = CategoriaGasto
-    template_name = 'contabilidad/lista_categorias.html'
-    context_object_name = 'categorias'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Categorías de gasto'
-        return context
-    
-class ListaNominasView(LoginRequiredMixin, ListView):
-    model = NominaEmpleado
-    template_name = 'contabilidad/nominas_list.html'
-    context_object_name = 'nominas'
-
-    def get_queryset(self):
-        proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
-        return NominaEmpleado.objects.filter(proyecto=proyecto).order_by('-fecha')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs.get('slug')
-        proyecto = Proyectos.objects.get(slug=slug)
-        context.update({
-            'page_title': f'Lista de nóminas {proyecto}',
-            'proyecto': proyecto,
-            'active_tab': 'nóminas',
-            'mostrar_tabs': True,
-        })
-        return context
-
 
 class IngresosListView(LoginRequiredMixin,ListView):
     model = Ingresos
@@ -122,64 +68,50 @@ class IngresosListView(LoginRequiredMixin,ListView):
         })
         return context 
     
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
-
-@login_required
-def eliminar_operaciones_generico(request,slug,modelo,instancia_id,redirect_url):
-    # Obtener el proyecto
-    proyecto = get_object_or_404(Proyectos, slug=slug)
-
-    if proyecto.estatus == True:
-
-        # Buscar el movimiento por ID
-        movimiento = get_object_or_404(modelo, id=instancia_id, proyecto=proyecto)
-
-        # Eliminar el movimiento
-        movimiento.delete()
-
-        # Actualizar el valor neto del proyecto (suma o resta según la categoría)
-        recalcular_totales_proyecto(proyecto.id)
-
-        # Mostrar un mensaje de éxito
-        messages.success(request, 'El gasto ha sido eliminado exitosamente.')
-
-        # Redirigir a la lista de gastos o a la página que prefieras
-        return redirect(redirect_url, slug=slug)
-    else:
-        # Mostrar un mensaje de advertencia
-        messages.error(request, 'No se pueden hacer cambios a un proyecto inactivo.')
-        # Redirigir a página de error
-        return redirect(redirect_url,slug=slug)
-
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
-# A partir de aquí se registran los gastos e ingresos
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
-
-class CrearIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
+class ActualizarIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, UpdateView):
     model = Ingresos
     form_class = IngresosForm
-    template_name = 'form_template.html'
+    template_name = "form_template.html"
 
     def get_success_url(self):
         return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context.update({
-            'form_title': f'Registrar ingreso {self.proyecto}',
-            'button_text': 'Guardar ingreso',
-            'page_title': f'Registro de ingresos {self.proyecto}',
+            'form_title': f'Actualizar ingreso {self.proyecto}',
+            'button_text': 'Actualizar ingreso',
+            'page_title': f'Actualizar ingreso {self.proyecto}',
             'proyecto': self.proyecto,
             'active_tab': 'ingresos',
             'mostrar_tabs': True,
         })
         return context
 
+class EliminarIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, DeleteView):
+    model = Ingresos
 
+    def get_success_url(self):
+        # Recalcular después de borrar
+        try:
+            resultado = recalcular_totales_proyecto(self.proyecto)
+            print(f"Totales recalculados tras eliminar ingreso: {resultado}")
+        except Exception as e:
+            print(f"Error al recalcular totales tras eliminar ingreso: {e}")
+        return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': f'Eliminar ingreso {self.proyecto}',
+            'button_text': 'Eliminar ingreso',
+            'page_title': f'Eliminar ingreso {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'ingresos',
+            'mostrar_tabs': True,
+        })
+        return context
+    
 class CrearGastoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
     model = Gasto
     form_class = GastoForm
@@ -199,10 +131,76 @@ class CrearGastoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
             'active_tab': 'gastos',
             'mostrar_tabs': True,
         })
-
         return context
     
-class CrearNominaView(CreateView):
+class ListaGastosView(LoginRequiredMixin, ListView):
+    model = Gasto
+    template_name = 'contabilidad/gastos.html'
+    context_object_name = 'gastos'
+
+    def get_queryset(self):
+        proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+        return Gasto.objects.filter(proyecto=proyecto).order_by('-fecha')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')
+        proyecto = Proyectos.objects.get(slug=slug)
+
+        context.update({
+            'page_title': f'Lista de gastos {proyecto}',
+            'proyecto': proyecto,
+            'active_tab': 'gastos',
+            'mostrar_tabs': True,
+        })
+        return context
+    
+class ActualizarGastoView(LoginRequiredMixin, ProyectoOperacionMixin, UpdateView):
+    model = Gasto
+    form_class = GastoForm
+    template_name = "form_template.html"
+
+    def get_success_url(self):
+        return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': f'Actualizar gasto {self.proyecto}',
+            'button_text': 'Actualizar gasto',
+            'page_title': f'Actualizar gasto {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'gastos',
+            'mostrar_tabs': True,
+        })
+        return context
+
+class EliminarGastoView(LoginRequiredMixin, ProyectoOperacionMixin, DeleteView):
+    model = Gasto
+
+    def get_success_url(self):
+        # Recalcular después de borrar
+        try:
+            resultado = recalcular_totales_proyecto(self.proyecto)
+            print(f"Totales recalculados tras eliminar gasto: {resultado}")
+        except Exception as e:
+            print(f"Error al recalcular totales tras eliminar gasto: {e}")
+        return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': f'Eliminar gasto {self.proyecto}',
+            'button_text': 'Eliminar gasto',
+            'page_title': f'Eliminar gasto {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'gastos',
+            'mostrar_tabs': True,
+        })
+        return context
+
+
+class CrearNominaView(LoginRequiredMixin,CreateView):
     model = NominaEmpleado
     form_class = NominaEmpleadoForm
     template_name = 'form_template.html'
@@ -234,7 +232,7 @@ class CrearNominaView(CreateView):
         )
 
         # Recalcular totales del proyecto
-        recalcular_totales_proyecto(self.proyecto.id)
+        recalcular_totales_proyecto(self.proyecto)
 
         messages.success(self.request, "Nómina registrada exitosamente.")
         return redirect('contabilidad:nominas', slug=self.proyecto.slug)
@@ -251,6 +249,94 @@ class CrearNominaView(CreateView):
         })
         return context
 
+class ListaNominasView(LoginRequiredMixin, ListView):
+    model = NominaEmpleado
+    template_name = 'contabilidad/nominas_list.html'
+    context_object_name = 'nominas'
+
+    def get_queryset(self):
+        proyecto = Proyectos.objects.get(slug=self.kwargs['slug'])
+        return NominaEmpleado.objects.filter(proyecto=proyecto).order_by('-fecha')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')
+        proyecto = Proyectos.objects.get(slug=slug)
+        context.update({
+            'page_title': f'Lista de nóminas {proyecto}',
+            'proyecto': proyecto,
+            'active_tab': 'nóminas',
+            'mostrar_tabs': True,
+        })
+        return context
+    
+class ActualizarNominaView(LoginRequiredMixin, UpdateView):
+    model = NominaEmpleado
+    form_class = NominaEmpleadoForm
+    template_name = 'form_template.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.nomina = self.get_object()
+        self.proyecto = self.nomina.proyecto
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        nomina = form.save()
+
+        # Actualizar gasto asociado
+        try:
+            gasto = Gasto.objects.get(lote=nomina.lote)
+            gasto.monto = nomina.total
+            gasto.fecha = nomina.fecha
+            gasto.descripcion = f"Nómina para {nomina.empleado} en lote {nomina.lote.id}"
+            gasto.save()
+        except Gasto.DoesNotExist:
+            print(f"Gasto asociado a lote {nomina.lote.id} no encontrado.")
+
+        recalcular_totales_proyecto(self.proyecto)
+        messages.success(self.request, "Nómina actualizada correctamente.")
+        return redirect('contabilidad:nominas', slug=self.proyecto.slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': f'Actualizar nómina {self.proyecto}',
+            'button_text': 'Guardar cambios',
+            'page_title': f'Editar nómina {self.proyecto}',
+            'proyecto': self.proyecto,
+            'active_tab': 'nóminas',
+            'mostrar_tabs': True,
+        })
+        return context
+    
+class EliminarNominaView(LoginRequiredMixin, DeleteView):
+    model = NominaEmpleado
+
+    def dispatch(self, request, *args, **kwargs):
+        self.nomina = self.get_object()
+        self.proyecto = self.nomina.proyecto
+        return super().dispatch(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        nomina = self.get_object()
+        lote = nomina.lote
+
+        nomina.delete()
+
+        # Eliminar gasto asociado
+        try:
+            gasto = Gasto.objects.get(lote=lote)
+            gasto.delete()
+        except Gasto.DoesNotExist:
+            print(f"Gasto no encontrado para lote {lote.id}")
+
+        # Eliminar lote (opcional, solo si se elimina toda la nómina ligada a él)
+        if not NominaEmpleado.objects.filter(lote=lote).exists():
+            lote.delete()
+
+        recalcular_totales_proyecto(self.proyecto.id)
+        messages.success(request, "Nómina eliminada correctamente.")
+        return redirect('contabilidad:nominas', slug=self.proyecto.slug)
 
 class CrearCategoriaGastoView(LoginRequiredMixin, CreateView):
     model = CategoriaGasto
@@ -270,18 +356,48 @@ class CrearCategoriaGastoView(LoginRequiredMixin, CreateView):
         return context
 
 
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
-# A partir de aquí se eliminan instancias de gastos o ingresos
-### ------------------------------------------------------------------------- ###
-### ------------------------------------------------------------------------- ###
+class ListaCategoriasGastoView(LoginRequiredMixin, ListView):
+    model = CategoriaGasto
+    template_name = 'contabilidad/lista_categorias.html'
+    context_object_name = 'categorias'
 
-@login_required
-def eliminar_ingresos(request, slug, gasto_id):
-    return eliminar_operaciones_generico(
-            request=request,
-            slug=slug,
-            modelo=Ingresos,
-            instancia_id=gasto_id, 
-            redirect_url='contabilidad:ingresos',  # URL a la que redirigir
-        )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Categorías de gasto'
+        return context
+    
+class ActualizarCategoriaGastoView(LoginRequiredMixin, UpdateView):
+    model = CategoriaGasto
+    form_class = CategoriaGastoForm
+    template_name = 'form_template.html'
+
+    def get_success_url(self):
+        return reverse('contabilidad:categorias_gasto')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form_title': 'Editar categoría de gasto',
+            'button_text': 'Guardar cambios',
+            'page_title': 'Editar categoría',
+        })
+        return context
+
+class EliminarCategoriaGastoView(LoginRequiredMixin, DeleteView):
+    model = CategoriaGasto
+
+    def get_success_url(self):
+        return reverse('contabilidad:categorias_gasto')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        try:
+            return super().delete(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(request, f"No puedes eliminar la categoría '{self.object.nombre}' porque está asociada a uno o más gastos.")
+            return redirect(self.get_success_url())
+

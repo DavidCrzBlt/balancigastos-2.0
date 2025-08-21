@@ -1,6 +1,3 @@
-from django.contrib import messages
-from django.shortcuts import redirect
-from decimal import Decimal
 from .utils import calcular_iva, recalcular_totales_proyecto
 
 class ProyectoOperacionMixin:
