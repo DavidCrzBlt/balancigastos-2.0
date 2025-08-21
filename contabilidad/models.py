@@ -121,6 +121,7 @@ class CategoriaGasto(models.Model):
 class Gasto(models.Model):
     proyecto = models.ForeignKey(Proyectos, on_delete=models.CASCADE)
     categoria = models.ForeignKey(CategoriaGasto, on_delete=models.CASCADE)
+    # categoria = models.ForeignKey(CategoriaGasto,on_delete=models.PROTECT,related_name='gastos')
     concepto = models.CharField(max_length=255, null=True, blank=True)
     proveedor = models.CharField(max_length=255, null=True, blank=True)
     comprador = models.CharField(max_length=255, null=True, blank=True)

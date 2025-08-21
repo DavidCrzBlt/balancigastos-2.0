@@ -48,8 +48,9 @@
                     <td>{{ gasto.iva|pesos }}</td>
                     <td>{{ gasto.comprador }}</td>
                     <td>{{ gasto.fecha|date:"d-M-y" }}</td>
-                    <td></td>
-                    <td></td>
+                    <td><a href="#"
+                            class="btn btn-outline-danger">Editar</a></td>
+                    <td><a href="{% url 'contabilidad:eliminar_gasto' proyecto.slug gasto.id %}" class="btn btn-outline-danger">Eliminar</a></td>
                 </tr>
                 {% endfor %}
                 <tr>

@@ -93,14 +93,14 @@ class CrearClienteView(FormularioGenericoView):
 
 class ClienteListView(ListView):
     model = Cliente
-    template_name = 'clientes/lista_clientes.html'  # Esta plantilla aún no existe
+    template_name = 'clientes/lista_clientes.html'  
     context_object_name = 'clientes'
 
 class ClienteUpdateView(UpdateView):
     model = Cliente
     form_class = ClienteForm
     template_name = 'form_template.html'
-    success_url = reverse_lazy('clientes:lista_clientes')  #Esta ruta aún no existe
+    success_url = reverse_lazy('clientes:lista_clientes')  
 
     page_title = 'Editar cliente'
     form_title = 'Editar información del cliente'
@@ -118,10 +118,18 @@ class ClienteUpdateView(UpdateView):
 # Esta clase elimina el esquema entero del tenant por lo que es importante poner una advertencia y seguros antes de activarla.
 class ClienteDeleteView(DeleteView):
     model = Cliente
-    template_name = 'clientes/confirmar_eliminacion.html' # Esta plantilla aún no existe
-    success_url = reverse_lazy('clientes:lista_clientes') # Esta ruta aún no existe
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('clientes:lista_clientes') 
 
     def delete(self, request, *args, **kwargs):
         cliente = self.get_object()
         messages.success(request, f'Cliente {cliente.nombre} eliminado correctamente.')
         return super().delete(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update({
+            'cancel_url':reverse_lazy('clientes:lista_clientes'),
+        })
+        return context

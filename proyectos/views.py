@@ -130,11 +130,16 @@ class EditarProyectoView(LoginRequiredMixin, UpdateView):
 
 class EliminarProyectoView(LoginRequiredMixin, DeleteView):
     model = Proyectos
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
+    success_url = reverse_lazy('proyectos:proyectos')
+    template_name = 'confirm_delete.html'
 
-    def get_success_url(self):
-        return reverse_lazy('proyectos:proyectos')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update({
+            'cancel_url':reverse_lazy('proyectos:proyectos'),
+        })
+        return context
 
 
 @login_required

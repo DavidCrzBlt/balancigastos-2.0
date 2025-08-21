@@ -46,7 +46,7 @@
                     <td>{{ ingreso.fecha|date:"d-M-y" }}</td>
                     <td><a href="#"
                             class="btn btn-outline-danger">Editar</a></td>
-                    <td><a href="#"
+                    <td><a href="{% url 'contabilidad:eliminar_ingreso' proyecto.slug ingreso.id %}"
                             onclick="return confirm('¿Estás seguro de que quieres eliminar este ingreso?');"
                             class="btn btn-outline-danger">Eliminar</a></td>
                 </tr>

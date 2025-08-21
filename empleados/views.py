@@ -1,4 +1,4 @@
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
@@ -58,11 +58,19 @@ class ActualizarEmpleadoView(LoginRequiredMixin, UpdateView):
 
 class EliminarEmpleadoView(LoginRequiredMixin, DeleteView):
     model = Empleados
-
+    template_name = 'confirm_delete.html'
     def get_success_url(self):
         # No poder eliminar empleados, solo darlos de baja si tienen asistencias asignadas
         messages.success(self.request, "Empleado eliminado exitosamente.")
-        return reverse('empleados:lista_empleados')
+        return reverse('empleados:empleados')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update({
+            'cancel_url':reverse_lazy('empleados:empleados'),
+        })
+        return context
 
 
 # ------------------------------ Asistencias ------------------------------
@@ -138,6 +146,7 @@ class ActualizarAsistenciaView(LoginRequiredMixin, UpdateView):
 
 class EliminarAsistenciaView(LoginRequiredMixin, DeleteView):
     model = Asistencias
+    template_name = 'confirm_delete.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.proyecto = get_object_or_404(Proyectos, slug=self.kwargs['slug'])
@@ -146,3 +155,11 @@ class EliminarAsistenciaView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         messages.success(self.request, "Asistencia eliminada exitosamente.")
         return reverse('empleados:asistencias', kwargs={'slug': self.proyecto.slug})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update({
+            'cancel_url':reverse_lazy('empleados:asistencias'),
+        })
+        return context

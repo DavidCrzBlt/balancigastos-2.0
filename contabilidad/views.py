@@ -4,14 +4,14 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Sum, ProtectedError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from decimal import Decimal
 
 from .models import Ingresos, Gasto, CategoriaGasto, NominaEmpleado, Lote
 from .forms import GastoForm, CategoriaGastoForm, NominaEmpleadoForm, IngresosForm
 from .utils import recalcular_totales_proyecto
-from .mixins import ProyectoOperacionMixin
+from .mixins import ProyectoOperacionMixin, ProyectoDeleteMixin
 
 from proyectos.models import Proyectos
 
@@ -88,29 +88,12 @@ class ActualizarIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, UpdateVi
         })
         return context
 
-class EliminarIngresoView(LoginRequiredMixin, ProyectoOperacionMixin, DeleteView):
+class EliminarIngresoView(LoginRequiredMixin, ProyectoDeleteMixin, DeleteView):
     model = Ingresos
-
-    def get_success_url(self):
-        # Recalcular después de borrar
-        try:
-            resultado = recalcular_totales_proyecto(self.proyecto)
-            print(f"Totales recalculados tras eliminar ingreso: {resultado}")
-        except Exception as e:
-            print(f"Error al recalcular totales tras eliminar ingreso: {e}")
-        return reverse('contabilidad:ingresos', kwargs={'slug': self.proyecto.slug})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'form_title': f'Eliminar ingreso {self.proyecto}',
-            'button_text': 'Eliminar ingreso',
-            'page_title': f'Eliminar ingreso {self.proyecto}',
-            'proyecto': self.proyecto,
-            'active_tab': 'ingresos',
-            'mostrar_tabs': True,
-        })
-        return context
+    template_name = "confirm_delete.html"
+    list_url_name = "contabilidad:ingresos"
+    success_message = "Ingreso eliminado correctamente"
+    
     
 class CrearGastoView(LoginRequiredMixin, ProyectoOperacionMixin, CreateView):
     model = Gasto
@@ -175,29 +158,11 @@ class ActualizarGastoView(LoginRequiredMixin, ProyectoOperacionMixin, UpdateView
         })
         return context
 
-class EliminarGastoView(LoginRequiredMixin, ProyectoOperacionMixin, DeleteView):
+class EliminarGastoView(LoginRequiredMixin, ProyectoDeleteMixin, DeleteView):
     model = Gasto
-
-    def get_success_url(self):
-        # Recalcular después de borrar
-        try:
-            resultado = recalcular_totales_proyecto(self.proyecto)
-            print(f"Totales recalculados tras eliminar gasto: {resultado}")
-        except Exception as e:
-            print(f"Error al recalcular totales tras eliminar gasto: {e}")
-        return reverse('contabilidad:gastos', kwargs={'slug': self.proyecto.slug})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'form_title': f'Eliminar gasto {self.proyecto}',
-            'button_text': 'Eliminar gasto',
-            'page_title': f'Eliminar gasto {self.proyecto}',
-            'proyecto': self.proyecto,
-            'active_tab': 'gastos',
-            'mostrar_tabs': True,
-        })
-        return context
+    template_name = "confirm_delete.html"
+    list_url_name = "contabilidad:gastos"
+    success_message = "Gasto eliminado correctamente"
 
 
 class CrearNominaView(LoginRequiredMixin,CreateView):
@@ -385,12 +350,15 @@ class ActualizarCategoriaGastoView(LoginRequiredMixin, UpdateView):
 
 class EliminarCategoriaGastoView(LoginRequiredMixin, DeleteView):
     model = CategoriaGasto
-
-    def get_success_url(self):
-        return reverse('contabilidad:categorias_gasto')
-
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('contabilidad:categorias_gasto')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context.update({
+            'cancel_url':reverse_lazy('contabilidad:categorias_gasto'),
+        })
         return context
 
     def delete(self, request, *args, **kwargs):

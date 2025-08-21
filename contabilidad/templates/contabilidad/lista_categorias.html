@@ -9,6 +9,8 @@
 <ul>
     {% for categoria in categorias %}
     <li>{{ categoria.nombre }}</li>
+    <a href="{% url 'contabilidad:eliminar_categoria_gasto' categoria.id %}" class="btn btn-outline-danger">Eliminar categoría</a>
+    
     {% endfor %}
 </ul>
 {% endblock %}
