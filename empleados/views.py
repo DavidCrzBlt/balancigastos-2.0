@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from empleados.models import Empleados, Asistencias
-from empleados.forms import EmpleadoForm, AsistenciaForm
+from empleados.forms import EmpleadosForm, AsistenciaForm
 from proyectos.models import Proyectos
 
 from core.views import FormularioGenericoView
@@ -22,7 +22,7 @@ class ListaEmpleadosView(LoginRequiredMixin, ListView):
 
 class CrearEmpleadoView(LoginRequiredMixin, CreateView):
     model = Empleados
-    form_class = EmpleadoForm
+    form_class = EmpleadosForm
     template_name = 'form_template.html'
 
     def get_success_url(self):
@@ -40,7 +40,7 @@ class CrearEmpleadoView(LoginRequiredMixin, CreateView):
 
 class ActualizarEmpleadoView(LoginRequiredMixin, UpdateView):
     model = Empleados
-    form_class = EmpleadoForm
+    form_class = EmpleadosForm
     template_name = 'form_template.html'
 
     def get_success_url(self):
